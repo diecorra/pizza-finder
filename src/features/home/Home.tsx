@@ -1,30 +1,38 @@
-import { Box, TextField } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import { CitiesProps } from '../../model/CitiesProps';
+import { fetchCities } from '../../services/fetchCities';
+import Error from '../../shared/components/Error';
+import Spinner from '../../shared/components/Spinner';
+import { SearchBox } from './SearchBox';
 
 const Home = () => {
+  const { isLoading, error, data } = useQuery<
+    boolean,
+    AxiosError<any, any>,
+    CitiesProps
+  >(['cities'], fetchCities);
+
   return (
-    <div
-      style={{
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1622880833523-7cf1c0bd4296?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80')",
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-      }}
-      className="container mx-auto px-12 min-h-screen flex flex-col"
-    >
-      <h1 className="text-4xl font-bold text-primary md:text-7xl z-10 text-center">
-        PIZZA FINDER
-      </h1>
-      <Box
-        component="form"
-        sx={{
-          '& > :not(style)': { m: 1, width: '25ch' },
-        }}
-        noValidate
-        autoComplete="off"
-      >
-        <TextField id="outlined-basic" label="Outlined" variant="outlined" />
-      </Box>
+    <div className="container mx-auto px-12 min-h-screen flex flex-col">
+      <div className="flex flex-col justify-around items-center">
+        <h1 className="text-4xl font-bold text-primary md:text-7xl z-10">
+          PIZZA FINDER
+        </h1>
+        <div className="flex items-center justify-center">
+          <SearchBox />
+        </div>
+        {!error ? (
+          <div className="flex flex-col">
+            {data?.results.map((result) => (
+              <li>{result.formatted}</li>
+            ))}
+          </div>
+        ) : (
+          <Error message={error.message} />
+        )}
+        {isLoading && <Spinner />}
+      </div>
     </div>
   );
 };
