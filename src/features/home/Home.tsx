@@ -11,7 +11,11 @@ const Home = () => {
     boolean,
     AxiosError<any, any>,
     CitiesProps
-  >(['cities'], fetchCities);
+  >(['cities'], () =>
+    fetchCities('d8bb63d3a1f7498e9d40f207eea57619', 'Sommacampagna')
+  );
+
+  console.log('ciao');
 
   return (
     <div className="container mx-auto px-12 min-h-screen flex flex-col">
@@ -22,16 +26,18 @@ const Home = () => {
         <div className="flex items-center justify-center">
           <SearchBox />
         </div>
-        {!error ? (
-          <div className="flex flex-col">
-            {data?.results.map((result) => (
-              <li>{result.formatted}</li>
-            ))}
-          </div>
-        ) : (
-          <Error message={error.message} />
-        )}
-        {isLoading && <Spinner />}
+        <div>
+          {!error ? (
+            <div className="flex flex-col">
+              {data?.results.map((result) => (
+                <li key={result.formatted}>{result.formatted}</li>
+              ))}
+            </div>
+          ) : (
+            <Error message={error.message} />
+          )}
+          {isLoading && <Spinner />}
+        </div>
       </div>
     </div>
   );
