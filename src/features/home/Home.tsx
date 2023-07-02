@@ -5,17 +5,14 @@ import { fetchCities } from '../../services/fetchCities';
 import Error from '../../shared/components/Error';
 import Spinner from '../../shared/components/Spinner';
 import { SearchBox } from './SearchBox';
+import { CITIES_APIKEY } from '../../shared/citiesApiKey';
 
 const Home = () => {
   const { isLoading, error, data } = useQuery<
     boolean,
     AxiosError<any, any>,
     CitiesProps
-  >(['cities'], () =>
-    fetchCities('d8bb63d3a1f7498e9d40f207eea57619', 'Sommacampagna')
-  );
-
-  console.log('ciao');
+  >(['cities'], () => fetchCities(CITIES_APIKEY, 'Sommacampagna'));
 
   return (
     <div className="container mx-auto px-12 min-h-screen flex flex-col">
