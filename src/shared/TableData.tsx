@@ -11,7 +11,7 @@ export default function TableData(props: TableProps) {
   const { data: results } = props;
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table sx={{ minWidth: 750 }} aria-label="simple table">
         <TableHead className="bg-slate-100">
           <TableRow>
             <TableCell>City</TableCell>
@@ -23,7 +23,11 @@ export default function TableData(props: TableProps) {
               key={result.formatted}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell component="th" scope="row">
+              <TableCell
+                component="th"
+                scope="row"
+                style={{ fontSize: '0.75rem' }}
+              >
                 {result.formatted}
               </TableCell>
             </TableRow>

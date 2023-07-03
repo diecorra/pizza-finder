@@ -7,7 +7,6 @@ import { fetchCities } from '../../services/fetchCities';
 import { HOCData } from '../../shared/HOCData';
 import TableData from '../../shared/TableData';
 import { CITIES_APIKEY } from '../../shared/citiesApiKey';
-import Sidebar from '../../shared/components/Sidebar';
 
 const Home = () => {
   const infoUseQuery = useQuery<boolean, AxiosError<any, any>, CitiesProps>(
@@ -16,33 +15,34 @@ const Home = () => {
   );
 
   return (
-    <div className="container mx-auto px-12 min-h-screen flex flex-col justify-around">
-      <div className="flex flex-col items-òl justify-center">
-        <div className="flex">
-          <h1 className="text-4xl font-bold text-primary md:text-7xl z-10">
-            PIZZA FINDER
-          </h1>
-          <Sidebar />
-        </div>
+    <div className="flex flex-col justify-around">
+      <div className="flex flex-col items-center justify-center">
+        <h1 className="text-4xl font-bold text-primary md:text-7xl z-10">
+          PIZZA FINDER
+        </h1>
+      </div>
+      <div className="flex flex-col gap-10">
         <Box
           component="form"
-          sx={{
-            '& > :not(style)': { m: 1, width: '25ch' },
-          }}
           noValidate
           autoComplete="off"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignContent: 'center',
+            paddingTop: '5rem',
+          }}
         >
           <TextField
             id="outlined-basic"
             label="Search city"
             variant="outlined"
+            className="mx-1"
           />
           <button>
             <SearchIcon />
           </button>
         </Box>
-      </div>
-      <div>
         <HOCData infoUseQuery={infoUseQuery}>
           <TableData data={infoUseQuery?.data?.results} />
         </HOCData>
