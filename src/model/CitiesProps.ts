@@ -203,6 +203,7 @@ export interface Components {
   region?: string;
   town?: string;
   hamlet?: string;
+  highway?: string;
 }
 
 export interface Geometry {

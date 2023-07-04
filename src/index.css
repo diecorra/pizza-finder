@@ -9,7 +9,7 @@ body {
 }
 
 .page {
-  @apply max-w-screen-lg mx-auto pt-24 px-3;
+  @apply max-w-screen-lg mx-auto pt-20 md:pt-24 px-3;
 }
 
 .page-sm {
@@ -17,11 +17,11 @@ body {
 }
 
 .input-wrapper {
-  @apply bg-white h-8 rounded-lg h-8 shadow-blue-500/50 flex items-center;
+  @apply bg-white rounded-lg h-12 shadow-blue-500/50 flex items-center;
 }
 
 input {
-  @apply bg-transparent border-none h-full text-lg w-full mx-2 text-[#130F49];
+  @apply bg-transparent border-none h-full text-lg w-full mx-3 text-[#130F49];
 }
 
 input:focus {

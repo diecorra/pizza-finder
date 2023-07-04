@@ -12,15 +12,19 @@ const Home = () => {
   const [input, setInput] = useState('');
 
   const infoUseQuery = useQuery<boolean, AxiosError<any, any>, CitiesProps>(
-    ['cities'],
-    () => fetchCities(CITIES_APIKEY, 'Verona')
+    ['city'],
+    () => fetchCities(CITIES_APIKEY, input),
+    { enabled: false }
   );
 
-  const handleSearch = (value: string) => {
+  const handleInputValue = (value: string) => {
     setInput(value);
   };
 
-  console.log(input);
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    infoUseQuery.refetch();
+  };
 
   return (
     <div className="flex flex-col justify-around gap-28">
@@ -30,17 +34,19 @@ const Home = () => {
         </h1>
       </div>
       <div className="flex flex-col items-center gap-3">
-        <div className="input-wrapper">
+        <form className="input-wrapper" onSubmit={handleSearch}>
           <input
             pattern=".{3,}"
             type="text"
             name="city"
-            placeholder="Search..."
+            placeholder="Search city..."
             value={input}
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={(e) => handleInputValue(e.target.value)}
           />
-          <SearchIcon sx={{ color: '#130F49', cursor: 'pointer' }} />
-        </div>
+          <button className="mx-3" type="submit">
+            <SearchIcon sx={{ color: '#130F49', cursor: 'pointer' }} />
+          </button>
+        </form>
         <HOCData infoUseQuery={infoUseQuery}>
           <TableData data={infoUseQuery?.data?.results}></TableData>
         </HOCData>
