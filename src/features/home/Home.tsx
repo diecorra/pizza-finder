@@ -1,7 +1,7 @@
 import SearchIcon from '@mui/icons-material/Search';
-import { Box, TextField } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { useState } from 'react';
 import { CitiesProps } from '../../model/CitiesProps';
 import { fetchCities } from '../../services/fetchCities';
 import { HOCData } from '../../shared/HOCData';
@@ -9,42 +9,40 @@ import TableData from '../../shared/TableData';
 import { CITIES_APIKEY } from '../../shared/citiesApiKey';
 
 const Home = () => {
+  const [input, setInput] = useState('');
+
   const infoUseQuery = useQuery<boolean, AxiosError<any, any>, CitiesProps>(
     ['cities'],
-    () => fetchCities(CITIES_APIKEY, 'Sommacampagna')
+    () => fetchCities(CITIES_APIKEY, 'Verona')
   );
 
+  const handleSearch = (value: string) => {
+    setInput(value);
+  };
+
+  console.log(input);
+
   return (
-    <div className="flex flex-col justify-around">
+    <div className="flex flex-col justify-around gap-28">
       <div className="flex flex-col items-center justify-center">
         <h1 className="text-4xl font-bold text-primary md:text-7xl z-10">
           PIZZA FINDER
         </h1>
       </div>
-      <div className="flex flex-col gap-10">
-        <Box
-          component="form"
-          noValidate
-          autoComplete="off"
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignContent: 'center',
-            paddingTop: '5rem',
-          }}
-        >
-          <TextField
-            id="outlined-basic"
-            label="Search city"
-            variant="outlined"
-            className="mx-1"
+      <div className="flex flex-col items-center gap-3">
+        <div className="input-wrapper">
+          <input
+            pattern=".{3,}"
+            type="text"
+            name="city"
+            placeholder="Search..."
+            value={input}
+            onChange={(e) => handleSearch(e.target.value)}
           />
-          <button>
-            <SearchIcon />
-          </button>
-        </Box>
+          <SearchIcon sx={{ color: '#130F49', cursor: 'pointer' }} />
+        </div>
         <HOCData infoUseQuery={infoUseQuery}>
-          <TableData data={infoUseQuery?.data?.results} />
+          <TableData data={infoUseQuery?.data?.results}></TableData>
         </HOCData>
       </div>
     </div>
