@@ -15,3 +15,15 @@ body {
 .page-sm {
   @apply max-w-sm mx-auto;
 }
+
+.input-wrapper {
+  @apply bg-white h-8 rounded-lg h-8 shadow-blue-500/50 flex items-center;
+}
+
+input {
+  @apply bg-transparent border-none h-full text-lg w-full mx-2 text-[#130F49];
+}
+
+input:focus {
+  @apply outline-none;
+}
