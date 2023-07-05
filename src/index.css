@@ -21,7 +21,7 @@ body {
 }
 
 input {
-  @apply bg-transparent border-none h-full text-lg w-full mx-3 text-[#130F49];
+  @apply bg-transparent border-none h-full text-base w-full mx-3 text-[#130F49] md:text-lg md:w-full;
 }
 
 input:focus {
