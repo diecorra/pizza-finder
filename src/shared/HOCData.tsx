@@ -9,7 +9,7 @@ export const HOCData = ({ children, infoUseQuery }: any) => {
   }
 
   if (error) {
-    return <Error message={error.message} />;
+    return <Error message="Error: not found" />;
   }
 
   return <>{children}</>;

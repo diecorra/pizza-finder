@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import City from './features/city/City';
 import Home from './features/home/Home';
 import MyReviews from './features/myreviews/MyReviews';
 import NewReview from './features/newreview/NewReview';
@@ -31,6 +32,7 @@ function App() {
             <Route path="myreviews" element={<MyReviews />} />
             <Route path="newreview" element={<NewReview />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="city" element={<City />} />
 
             <Route path="*" element={<Navigate to="home" />} />
           </Routes>
