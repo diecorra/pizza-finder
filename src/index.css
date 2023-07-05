@@ -21,9 +21,15 @@ body {
 }
 
 input {
-  @apply bg-transparent border-none h-full text-base w-full mx-3 text-[#130F49] md:text-lg md:w-full;
+  @apply bg-transparent border-none h-full text-base w-full mx-3 text-[#130F49] md:text-lg md:w-full focus:outline-none;
+}
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
-input:focus {
-  @apply outline-none;
+h1 {
+  @apply text-4xl font-bold text-primary md:text-7xl z-10;
 }

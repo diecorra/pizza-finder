@@ -29,9 +29,7 @@ const Home = () => {
   return (
     <div className="flex flex-col justify-around gap-10">
       <div className="flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-bold text-primary md:text-7xl z-10">
-          PIZZA FINDER
-        </h1>
+        <h1>PIZZA FINDER</h1>
       </div>
       <div className="flex flex-col items-center gap-3">
         <form className="input-wrapper" onSubmit={handleSearch}>
