@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Result } from '../model/CitiesProps';
 
 export const fetchCities = async (apiKey: string, city: string) => {
   const result = await axios.get(
@@ -6,7 +7,7 @@ export const fetchCities = async (apiKey: string, city: string) => {
   );
 
   const resultsOnlyCities = result.data.results.filter(
-    (result) =>
+    (result: Result) =>
       result.components._type === 'city' ||
       result.components._type === 'village'
   );

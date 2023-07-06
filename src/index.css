@@ -21,7 +21,7 @@ body {
 }
 
 input {
-  @apply bg-transparent border-none h-full text-base w-full mx-3 text-[#130F49] md:text-lg md:w-full focus:outline-none;
+  @apply bg-transparent border-none h-full text-base w-full mx-3 text-[#130F49] md:text-lg md:w-full focus:outline-none bg-white rounded-lg;
 }
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

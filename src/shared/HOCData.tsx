@@ -2,7 +2,7 @@ import Error from './components/Error';
 import Spinner from './components/Spinner';
 
 export const HOCData = ({ children, infoUseQuery }: any) => {
-  const { isLoading, error, data, isFetching } = infoUseQuery;
+  const { isLoading, error, isFetching } = infoUseQuery;
 
   if (isLoading && isFetching) {
     return <Spinner />;
