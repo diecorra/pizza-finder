@@ -5,8 +5,8 @@ import { NavLink } from 'react-router-dom';
 export function NavBar() {
   return (
     <div className="fixed top-0 left-0 right-0 shadow-2xl z-10">
-      <div className="bg-slate-900 flex justify-between items-center h-14 text-white">
-        <ul className="flex items-center justify-center w-full list-none gap-10 text-xs sm:text-base">
+      <div className="bg-slate-900 flex justify-between items-center h-14 text-white w-screen">
+        <ul className="flex items-center justify-center w-screen list-none gap-10 text-xs sm:text-base">
           <NavLink to="login">
             <Tooltip title="Admin Login">
               <AccountCircleIcon className="scale-100 hover:scale-125" />
