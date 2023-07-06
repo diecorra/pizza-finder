@@ -7,6 +7,7 @@ import { fetchCities } from '../../services/fetchCities';
 import { HOCData } from '../../shared/HOCData';
 import TableData from '../../shared/TableData';
 import { CITIES_APIKEY } from '../../shared/citiesApiKey';
+import pizzaicon from '../../../public/favicon-pizza.webp';
 
 const Home = () => {
   const [input, setInput] = useState('');
@@ -28,8 +29,9 @@ const Home = () => {
 
   return (
     <div className="flex flex-col justify-around gap-10">
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex items-center justify-center gap-1">
         <h1>PIZZA FINDER</h1>
+        <img className="w-10" src={pizzaicon} alt="Pizza icon" />
       </div>
       <div className="flex flex-col items-center gap-3">
         <form className="input-wrapper" onSubmit={handleSearch}>
