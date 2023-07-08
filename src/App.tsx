@@ -4,8 +4,9 @@ import City from './features/city/City';
 import Home from './features/home/Home';
 import LastReviews from './features/lastreviews/LastReviews';
 import LoginPage from './features/login/LoginPage';
-import Settings from './features/settings/Settings';
+import NewPizzeria from './features/newpizzeria/NewPizzeria';
 import { NavBar } from './shared/components/NavBar';
+import { PrivateRoute } from './shared/components/PrivateRoute';
 
 const twentyFourHoursInMs = 1000 * 60 * 60 * 24;
 const queryClient = new QueryClient({
@@ -32,7 +33,14 @@ function App() {
             <Route path="lastreviews" element={<LastReviews />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="city" element={<City />} />
-            <Route path="settings" element={<Settings />} />
+            <Route
+              path="newpizzeria"
+              element={
+                <PrivateRoute>
+                  <NewPizzeria />
+                </PrivateRoute>
+              }
+            />
 
             <Route path="*" element={<Navigate to="home" />} />
           </Routes>

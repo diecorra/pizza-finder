@@ -5,7 +5,7 @@
 html,
 body {
   font-family: 'Belanosima', sans-serif;
-  @apply bg-gradient-to-tl from-slate-500 to-blue-500 text-white bg-fixed h-full;
+  @apply bg-gradient-to-tl from-slate-500 to-blue-500 text-white bg-fixed h-full text-sm md:text-lg;
 }
 
 .page {
@@ -32,4 +32,22 @@ input:-webkit-autofill:active {
 
 h1 {
   @apply text-4xl font-bold text-primary md:text-7xl z-10;
+}
+
+h2 {
+  @apply text-2xl font-bold text-primary md:text-4xl z-10;
+}
+
+.btn {
+  @apply px-5 py-2 rounded-full m-1 font-bold text-sm text-center disabled:opacity-30 transition;
+}
+
+.button {
+  @apply btn bg-primary rounded-xl;
+}
+
+button:disabled,
+button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
