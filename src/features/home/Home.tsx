@@ -7,7 +7,7 @@ import { fetchCities } from '../../services/fetchCities';
 import { HOCData } from '../../shared/HOCData';
 import TableData from '../../shared/TableData';
 import { CITIES_APIKEY } from '../../shared/citiesApiKey';
-import pizzaicon from '../../../public/favicon-pizza.webp';
+import pizzaicon from '../../assets/favicon-pizza.webp';
 
 const Home = () => {
   const [input, setInput] = useState('');
