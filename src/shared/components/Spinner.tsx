@@ -4,7 +4,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 export default function Spinner() {
   return (
     <Box sx={{ display: 'flex' }}>
-      <CircularProgress />
+      <CircularProgress size="10rem" color="success" />
     </Box>
   );
 }
