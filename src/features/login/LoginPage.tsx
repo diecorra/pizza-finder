@@ -1,15 +1,15 @@
-import { FormEvent, useEffect } from 'react';
-import { useLogin } from './useLogin';
+import InfoIcon from '@mui/icons-material/Info';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Tooltip } from '@mui/material';
+import { FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   selectAuthError,
   selectAuthIsLogged,
   useAuth,
 } from '../../services/auth';
 import Error from '../../shared/components/Error';
-import { useNavigate } from 'react-router-dom';
-import { Tooltip } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
-import LogoutIcon from '@mui/icons-material/Logout';
+import { useLogin } from './useLogin';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
