@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import { dateFormat } from '../dateFormat';
 
 export default function ReviewCard({ dataReview }: any) {
   const {
@@ -34,7 +35,7 @@ export default function ReviewCard({ dataReview }: any) {
           </Tooltip>
         }
         title={pizzeria}
-        subheader={created}
+        subheader={dateFormat(created)}
         titleTypographyProps={{ fontSize: '1rem', fontWeight: 'bold' }}
         subheaderTypographyProps={{ fontSize: '0.7rem' }}
       />
