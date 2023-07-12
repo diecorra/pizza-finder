@@ -19,8 +19,8 @@ export function NavBar() {
           <NavLink to="home" className="hover:scale-125">
             HOME
           </NavLink>
-          <NavLink to="lastreviews" className="hover:scale-125">
-            LAST REVIEWS
+          <NavLink to="reviews" className="hover:scale-125">
+            REVIEWS
           </NavLink>
           <Tooltip title={clsx({ 'Login to access': !isLogged })}>
             <NavLink
