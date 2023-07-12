@@ -21,7 +21,6 @@ export const LoginPage = () => {
 
   const doLogin = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
     login(formData.username, formData.password);
   };
 
