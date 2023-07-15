@@ -22,7 +22,7 @@ const NewReview = () => {
           <div className="flex bg-indigo-300 rounded p-1 w-96">
             <p className="w-full">Description :</p>
             <textarea
-              className="p-1 h-32 w-96"
+              className="p-1 h-32 w-96 text-black"
               name="Text1"
               placeholder="description.."
             ></textarea>
