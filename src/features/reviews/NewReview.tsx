@@ -1,8 +1,40 @@
-import { Rating } from '@mui/material';
+import {
+  Autocomplete,
+  AutocompleteInputChangeReason,
+  Rating,
+  TextField,
+} from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import React from 'react';
+import { Result } from '../../model/CitiesProps';
+import { fetchCities } from '../../services/fetchCities';
+import { CITIES_APIKEY } from '../../shared/citiesApiKey';
 
 const NewReview = () => {
-  const [value, setValue] = React.useState<number | null>(2);
+  const [rate, setRate] = React.useState<number | null>(2);
+  const [city, setCity] = React.useState('');
+  const [options, setOptions] = React.useState([]);
+
+  const infoUseQuery = useQuery<boolean, AxiosError<any, any>, Result[]>(
+    ['city'],
+    () => fetchCities(CITIES_APIKEY, city),
+    { enabled: false }
+  );
+
+  const onInputChange = (
+    event: React.SyntheticEvent<Element, Event>,
+    value: string,
+    reason: AutocompleteInputChangeReason
+  ) => {
+    if (value.length >= 2) {
+      setCity(value);
+      infoUseQuery.refetch();
+      //setOptions(infoUseQuery);
+    } else {
+      setOptions([]);
+    }
+  };
 
   return (
     <div className="flex flex-col justify-center items-center w-full h-fit gap-4 bg-indigo-900 rounded pb-4">
@@ -22,18 +54,33 @@ const NewReview = () => {
           <div className="flex bg-indigo-300 rounded p-1 w-96">
             <p className="w-full">Description :</p>
             <textarea
-              className="p-1 h-32 w-96 text-black"
+              className="p-1 h-32 w-96 text-black rounded"
               name="Text1"
               placeholder="description.."
             ></textarea>
           </div>
+          <Autocomplete
+            className="bg-indigo-300 w-full font-bold"
+            disablePortal
+            onInputChange={onInputChange}
+            options={options}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                InputProps={{
+                  style: { fontFamily: 'Belanosima', fontSize: '1.125rem' },
+                }}
+                label="City"
+              />
+            )}
+          />
           <div className="flex bg-indigo-300 rounded p-1 w-96">
             <p className="w-full">Rating :</p>
             <Rating
-              name="read-only"
-              value={value}
-              onChange={(event, newValue) => {
-                setValue(newValue);
+              name="rate-pizzeria"
+              value={rate}
+              onChange={(event, newRate) => {
+                setRate(newRate);
               }}
             />
           </div>
