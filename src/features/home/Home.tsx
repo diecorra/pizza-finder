@@ -36,10 +36,11 @@ const Home = () => {
       <div className="flex flex-col items-center gap-3">
         <form className="input-wrapper" onSubmit={handleSearch}>
           <input
+            className="mx-3"
             pattern=".{3,}"
             type="text"
             name="city"
-            placeholder="Search city, town or ..."
+            placeholder="Search city, town.."
             value={input}
             onChange={(e) => handleInputValue(e.target.value)}
           />

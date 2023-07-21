@@ -49,7 +49,7 @@ const NewReview = () => {
           </div>
           <div className="flex bg-indigo-300 rounded p-1 w-96">
             <p className="w-full">Title :</p>
-            <input className="p-1" type="text" placeholder="title.." />
+            <input className="p-1 w-full" type="text" placeholder="title.." />
           </div>
           <div className="flex bg-indigo-300 rounded p-1 w-96">
             <p className="w-full">Description :</p>
