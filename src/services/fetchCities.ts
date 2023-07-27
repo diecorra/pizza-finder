@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { Result } from '../model/CitiesProps';
 
-export const fetchCities = async (apiKey: string, city: string) => {
+const APIKEY = import.meta.env.VITE_API_KEY;
+
+export const fetchCities = async (city: string) => {
   const result = await axios.get(
-    ` https://api.opencagedata.com/geocode/v1/json?key=${apiKey}&q=${city}`
+    ` https://api.opencagedata.com/geocode/v1/json?key=${APIKEY}&q=${city}`
   );
 
   const resultsOnlyCities = result.data.results.filter(
