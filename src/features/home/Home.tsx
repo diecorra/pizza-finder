@@ -2,19 +2,18 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
+import pizzaicon from '../../assets/favicon-pizza.webp';
 import { Result } from '../../model/CitiesProps';
 import { fetchCities } from '../../services/fetchCities';
 import { HOCData } from '../../shared/HOCData';
 import TableData from '../../shared/TableData';
-import { CITIES_APIKEY } from '../../shared/citiesApiKey';
-import pizzaicon from '../../assets/favicon-pizza.webp';
 
 const Home = () => {
   const [input, setInput] = useState('');
 
   const infoUseQuery = useQuery<boolean, AxiosError<any, any>, Result[]>(
     ['city'],
-    () => fetchCities(CITIES_APIKEY, input),
+    () => fetchCities(input),
     { enabled: false }
   );
 
