@@ -6,7 +6,7 @@ import { Result } from '../../model/CitiesProps';
 import { fetchCities } from '../../services/fetchCities';
 
 const NewReview = () => {
-  const [rate, setRate] = React.useState<number | null>(2);
+  const [rate, setRate] = React.useState<number | null>(4);
   const [city, setCity] = React.useState('');
   const [options, setOptions] = React.useState<string[]>(['']);
 
@@ -70,6 +70,34 @@ const NewReview = () => {
               // value={city}
               renderInput={(params) => (
                 <TextField
+                  placeholder="Select city"
+                  {...params}
+                  style={{
+                    fontFamily: 'Belanosima',
+                    fontSize: '1.125rem',
+                    backgroundColor: 'white',
+                  }}
+                />
+              )}
+            />
+          </div>
+          <div className="flex bg-indigo-300 rounded p-1 w-full">
+            <p className="w-[40%]">Pizzeria</p>
+            <Autocomplete
+              disabled={true}
+              className="bg-indigo-300 font-bold w-[100%]"
+              inputValue={''}
+              //onInputChange={onInputChange}
+              onChange={(event: any, newValue: string | null) => {
+                // if (newValue) {
+                //   setCity(newValue);
+                // }
+              }}
+              options={options}
+              // value={city}
+              renderInput={(params) => (
+                <TextField
+                  placeholder="Select pizzeria"
                   {...params}
                   style={{
                     fontFamily: 'Belanosima',
