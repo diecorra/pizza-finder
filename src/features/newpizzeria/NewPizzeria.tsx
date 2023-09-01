@@ -8,6 +8,7 @@ import { fetchCities } from '../../services/fetchCities';
 const NewPizzeria = () => {
   const [rate, setRate] = React.useState<number | null>(4);
   const [city, setCity] = React.useState('');
+  const [localization, setLocalization] = React.useState('');
   const [options, setOptions] = React.useState<string[]>(['']);
 
   const {

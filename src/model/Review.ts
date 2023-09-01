@@ -4,9 +4,8 @@ export interface Review {
   title: string;
   description: string;
   img: string;
-  adviced: boolean;
   pizzeria: string;
-  city_id: string;
+  city: string;
   stars: number;
   created: Date;
 }

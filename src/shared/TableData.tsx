@@ -6,11 +6,30 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { useNavigate } from 'react-router-dom';
+import { Components } from '../model/CitiesProps';
 import { TableProps } from '../vite-env';
+
+type prova = 'country' | 'county' | 'city' | 'town' | 'village';
 
 export default function TableData(props: TableProps) {
   const { data: results } = props;
   const navigate = useNavigate();
+
+  const valuesAttribute: prova[] = [
+    'country',
+    'county',
+    'city',
+    'town',
+    'village',
+  ];
+
+  const buildCityName = (result: Components) =>
+    valuesAttribute.reduce((state, value) => {
+      if (result[value]) {
+        return state + '_' + result[value]!;
+      }
+      return state;
+    }, '');
 
   return (
     <TableContainer component={Paper} className="mb-10">
@@ -28,7 +47,14 @@ export default function TableData(props: TableProps) {
               key={result.formatted}
               className="hover:bg-yellow-100 cursor-pointer"
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              onClick={() => navigate('/city')}
+              onClick={() =>
+                navigate(
+                  `/reviews/${buildCityName(result.components).replace(
+                    /^_/,
+                    ''
+                  )}`
+                )
+              }
             >
               <TableCell
                 component="th"

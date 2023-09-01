@@ -1,13 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import City from './features/city/City';
 import Home from './features/home/Home';
-import Reviews from './features/reviews/Reviews';
 import LoginPage from './features/login/LoginPage';
 import NewPizzeria from './features/newpizzeria/NewPizzeria';
+import NewReview from './features/reviews/NewReview';
+import Reviews from './features/reviews/Reviews';
 import { NavBar } from './shared/components/NavBar';
 import { PrivateRoute } from './shared/components/PrivateRoute';
-import NewReview from './features/reviews/NewReview';
 
 const twentyFourHoursInMs = 1000 * 60 * 60 * 24;
 const queryClient = new QueryClient({
@@ -32,8 +31,8 @@ function App() {
           <Routes>
             <Route path="home" element={<Home />} />
             <Route path="reviews" element={<Reviews />} />
+            <Route path="reviews/:id" element={<Reviews />} />
             <Route path="login" element={<LoginPage />} />
-            <Route path="city" element={<City />} />
             <Route path="newreview" element={<NewReview />} />
             <Route
               path="newpizzeria"

@@ -2,7 +2,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Tooltip from '@mui/material/Tooltip';
 import { NavLink } from 'react-router-dom';
 import { selectAuthIsLogged, useAuth } from '../../services/auth';
-import clsx from 'clsx';
 
 export function NavBar() {
   const isLogged = useAuth(selectAuthIsLogged);
@@ -16,23 +15,35 @@ export function NavBar() {
               <AccountCircleIcon className="hover:scale-125" />
             </Tooltip>
           </NavLink>
-          <NavLink to="home" className="hover:scale-125">
+          <NavLink
+            to="home"
+            className={({ isActive }) =>
+              isActive ? 'hover:scale-125 underline' : 'hover:scale-125'
+            }
+          >
             HOME
           </NavLink>
-          <NavLink to="reviews" className="hover:scale-125">
+          <NavLink
+            to="reviews"
+            className={({ isActive }) =>
+              isActive ? 'hover:scale-125 underline' : 'hover:scale-125'
+            }
+          >
             REVIEWS
           </NavLink>
-          <Tooltip title={clsx({ 'Login to access': !isLogged })}>
-            <NavLink
-              to="newpizzeria"
-              className={clsx({
-                'hover:scale-125': isLogged,
-                'text-gray-400': !isLogged,
-              })}
-            >
-              NEW PIZZERIA
-            </NavLink>
-          </Tooltip>
+
+          <NavLink
+            to="newpizzeria"
+            className={({ isActive }) =>
+              isLogged
+                ? isActive
+                  ? 'hover:scale-125 underline'
+                  : "'hover:scale-125'"
+                : 'text-gray-400'
+            }
+          >
+            NEW PIZZERIA
+          </NavLink>
         </ul>
       </div>
     </div>
