@@ -14,6 +14,7 @@ import { Result } from '../../model/citiesProps';
 import { Pizzeria } from '../../model/pizzeria';
 import { fetchCities } from '../../services/fetchCities';
 import { usePizzeriaService } from '../../services/pizzerias/usePizzeriasService';
+import { buildCityName } from '../../shared/buildCityName';
 import LabelComponent from './LabelComponent';
 
 const NewPizzeria = () => {
@@ -43,12 +44,14 @@ const NewPizzeria = () => {
     }
   };
 
+  console.log('citiesFound: ', citiesFound);
+
   const handleSave = (name: string, location: string, street: string) => {
-    if (validForm(name, location, street)) {
+    if (validForm(name, location, street) && citiesFound) {
       const pizzeriaInfo: Pizzeria = {
         name,
         street,
-        city: location,
+        city: buildCityName(citiesFound[0].components).replace(/^_/, ''),
       };
       addPizzeria(pizzeriaInfo)
         .then((res) => {

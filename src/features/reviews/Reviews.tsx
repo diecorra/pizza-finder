@@ -35,7 +35,7 @@ const LastReviews = () => {
           color: '#0F172A',
         }}
       >
-        SEND REVIEW
+        NEW REVIEW
       </Button>
       {isLoading && <Spinner />}
       {isError && <Error message={`Sorry, we couldn't find reviews!`} />}

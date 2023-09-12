@@ -24,6 +24,9 @@ const NewReview = () => {
   const [description, setDescription] = React.useState<string>('');
   const [pizzeria, setPizzeria] = React.useState<string>('');
   const [img, setImg] = React.useState<string>('');
+  const [pizzeriaOptions, pizzeriaSetOptions] = React.useState<string[]>([
+    'No pizzeria found in this city!',
+  ]);
   const [snackbarData, setSnackbarData] = React.useState<{
     color: AlertColor | undefined;
     message: string;
@@ -90,7 +93,7 @@ const NewReview = () => {
       <h2 className="rounded p-4 w-full text-slate-900 text-center">
         How was your experience?
       </h2>
-      <form>
+      <form className="w-80">
         <LabelComponent label="Name">
           <TextField
             value={name}
@@ -140,6 +143,7 @@ const NewReview = () => {
             onChange={(event: any, newValue: string | null) => {
               if (newValue) {
                 setCity(newValue);
+                //query per fillare options pizzeria
               }
             }}
             options={options}
@@ -158,10 +162,10 @@ const NewReview = () => {
         </LabelComponent>
         <LabelComponent label="Pizzeria">
           <Autocomplete
-            disabled={true}
+            disabled={!city}
             className="font-bold w-[100%]"
             inputValue={''}
-            options={options}
+            options={pizzeriaOptions}
             renderInput={(params) => (
               <TextField
                 placeholder="Select pizzeria"
@@ -182,9 +186,11 @@ const NewReview = () => {
             value={rate}
             onChange={(
               event: SyntheticEvent<Element, Event>,
-              newRate: number
+              newRate: number | null
             ) => {
-              setRate(newRate);
+              if (newRate) {
+                setRate(newRate);
+              }
             }}
           />
         </LabelComponent>
