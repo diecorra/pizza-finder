@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-import { Result } from './model/CitiesProps';
+import { Result } from './model/citiesProps';
 
 interface ImportMetaEnv {
   readonly VITE_API_KEY: string;

@@ -11,18 +11,8 @@ import CardContent from '@mui/material/CardContent';
 import { dateFormat } from '../dateFormat';
 
 export default function ReviewCard({ dataReview }: any) {
-  const {
-    id,
-    user,
-    title,
-    description,
-    img,
-    adviced,
-    pizzeria,
-    city_id,
-    stars,
-    created,
-  } = dataReview;
+  const { id, user, title, description, img, pizzeria, city, stars, created } =
+    dataReview;
 
   return (
     <Card className="max-w-[16rem] max-h-full border-4 border-black">

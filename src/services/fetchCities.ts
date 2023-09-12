@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Result } from '../model/CitiesProps';
+import { Result } from '../model/citiesProps';
 
 const APIKEY = import.meta.env.VITE_API_KEY;
 

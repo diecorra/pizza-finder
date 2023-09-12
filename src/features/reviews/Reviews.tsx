@@ -1,6 +1,7 @@
+import { Button } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Review } from '../../model/Review';
+import { Review } from '../../model/review';
 import { getFullListPocketBase } from '../../services/pocketbase';
 import Error from '../../shared/components/Error';
 import ReviewCard from '../../shared/components/ReviewCard';
@@ -24,12 +25,18 @@ const LastReviews = () => {
       <h2>
         {id ? `REVIEWS FOR  "${id.replaceAll('_', ',')}"` : 'LAST REVIEWS'}
       </h2>
-      <button
-        className="bg-red-500 rounded p-2"
+      <Button
+        variant="contained"
         onClick={() => navigate('/newreview')}
+        style={{
+          ...textFieldStyle,
+          backgroundColor: 'whitesmoke',
+          minWidth: '130px',
+          color: '#0F172A',
+        }}
       >
-        NEW REVIEW
-      </button>
+        SEND REVIEW
+      </Button>
       {isLoading && <Spinner />}
       {isError && <Error message={`Sorry, we couldn't find reviews!`} />}
       {reviews && (
@@ -44,3 +51,9 @@ const LastReviews = () => {
 };
 
 export default LastReviews;
+
+const textFieldStyle = {
+  fontFamily: 'Belanosima',
+  fontSize: '1.125rem',
+  backgroundColor: 'white',
+};

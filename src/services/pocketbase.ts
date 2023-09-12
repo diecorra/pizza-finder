@@ -1,5 +1,5 @@
 import PocketBase, { RecordFullListQueryParams } from 'pocketbase';
-import { Review } from '../model/Review';
+import { Review } from '../model/review';
 
 export const pb = new PocketBase(import.meta.env.VITE_POCKET_BASE_URL);
 

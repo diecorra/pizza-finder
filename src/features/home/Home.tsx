@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import pizzaicon from '../../assets/favicon-pizza.webp';
-import { Result } from '../../model/CitiesProps';
+import { Result } from '../../model/citiesProps';
 import { fetchCities } from '../../services/fetchCities';
 import { HOCData } from '../../shared/HOCData';
 import TableData from '../../shared/TableData';
