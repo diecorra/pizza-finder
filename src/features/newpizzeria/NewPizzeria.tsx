@@ -14,7 +14,7 @@ import { Result } from '../../model/citiesProps';
 import { Pizzeria } from '../../model/pizzeria';
 import { fetchCities } from '../../services/fetchCities';
 import { usePizzeriaService } from '../../services/pizzerias/usePizzeriasService';
-import { buildCityName } from '../../shared/buildCityName';
+import { buildCityNameFromResultComponents } from '../../shared/buildCityName';
 import LabelComponent from './LabelComponent';
 
 const NewPizzeria = () => {
@@ -51,7 +51,7 @@ const NewPizzeria = () => {
       const pizzeriaInfo: Pizzeria = {
         name,
         street,
-        city: buildCityName(citiesFound[0].components).replace(/^_/, ''),
+        city: buildCityNameFromResultComponents(citiesFound[0].components),
       };
       addPizzeria(pizzeriaInfo)
         .then((res) => {

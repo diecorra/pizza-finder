@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { useNavigate } from 'react-router-dom';
 import { TableProps } from '../vite-env';
-import { buildCityName } from './buildCityName';
+import { buildCityNameFromResultComponents } from './buildCityName';
 
 export default function TableData(props: TableProps) {
   const { data: results } = props;
@@ -31,10 +31,9 @@ export default function TableData(props: TableProps) {
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               onClick={() =>
                 navigate(
-                  `/reviews/${buildCityName(result.components).replace(
-                    /^_/,
-                    ''
-                  )}`
+                  `/reviews/${buildCityNameFromResultComponents(
+                    result.components
+                  ).replace(/^_/, '')}`
                 )
               }
             >

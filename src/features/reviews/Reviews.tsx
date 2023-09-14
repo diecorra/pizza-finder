@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Review } from '../../model/review';
-import { getFullListPocketBase } from '../../services/pocketbase';
+import { getFullListOrWithFilterPocketBase } from '../../services/pocketbase';
 import Error from '../../shared/components/Error';
 import ReviewCard from '../../shared/components/ReviewCard';
 import Spinner from '../../shared/components/Spinner';
@@ -15,7 +15,7 @@ const LastReviews = () => {
     isLoading,
     isError,
   } = useQuery([id], () =>
-    getFullListPocketBase('reviews', {
+    getFullListOrWithFilterPocketBase('reviews', {
       filter: id ? `city = "${id}"` : '',
     })
   );

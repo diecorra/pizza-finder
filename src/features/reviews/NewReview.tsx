@@ -9,24 +9,32 @@ import {
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { ClientResponseError } from 'pocketbase';
 import React, { ChangeEvent, SyntheticEvent, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Result } from '../../model/citiesProps';
 import { Review } from '../../model/review';
 import { fetchCities } from '../../services/fetchCities';
+import { getFullListOrWithFilterPizzerias } from '../../services/pocketbase';
+import { useReviewService } from '../../services/reviews/useReviewsService';
+import { buildCityNameFromResultComponents } from '../../shared/buildCityName';
 import LabelComponent from '../newpizzeria/LabelComponent';
 
 const NewReview = () => {
+  const navigate = useNavigate();
   const [rate, setRate] = React.useState<number>(4);
   const [city, setCity] = React.useState('');
-  const [options, setOptions] = React.useState<string[]>(['']);
+  const [citySelect, setCitySelect] = React.useState('');
+  const [cityOptions, setCityOptions] = React.useState<any>([
+    { label: 'prova', value: '' },
+  ]);
+  const [pizzeriaOptions, setPizzeriaOptions] = React.useState<string[]>([]);
   const [name, setName] = React.useState<string>('');
   const [title, setTitle] = React.useState<string>('');
   const [description, setDescription] = React.useState<string>('');
   const [pizzeria, setPizzeria] = React.useState<string>('');
   const [img, setImg] = React.useState<string>('');
-  const [pizzeriaOptions, pizzeriaSetOptions] = React.useState<string[]>([
-    'No pizzeria found in this city!',
-  ]);
+  const { state, addReview } = useReviewService();
   const [snackbarData, setSnackbarData] = React.useState<{
     color: AlertColor | undefined;
     message: string;
@@ -37,15 +45,33 @@ const NewReview = () => {
     data: citiesFound,
     isLoading,
     isError,
-  } = useQuery<boolean, AxiosError<any, any>, Result[]>([city], () =>
-    fetchCities(city)
+  } = useQuery<boolean, AxiosError<any, any>, Result[]>(
+    [city],
+    () => fetchCities(city),
+    { enabled: city.length > 3 }
   );
 
-  const onInputChange = (
+  const { data: pizzerias } = useQuery(
+    [citySelect],
+    () =>
+      getFullListOrWithFilterPizzerias('pizzerias', {
+        filter: citySelect ? `city = "${citySelect}"` : '',
+      }),
+    { enabled: !!citySelect }
+  );
+
+  const onCityChange = (
     event: React.SyntheticEvent<Element, Event>,
     value: string
   ) => {
     setCity(value);
+  };
+
+  const onPizzeriaChange = (
+    event: React.SyntheticEvent<Element, Event>,
+    value: string
+  ) => {
+    city ? setPizzeria(value) : setPizzeria('');
   };
 
   const validForm = (review: Review) => {
@@ -61,9 +87,32 @@ const NewReview = () => {
 
   const handleSendReview = (review: Review) => {
     if (validForm(review)) {
-      console.log('ok');
+      console.log(review);
+      addReview(review)
+        .then((res) => {
+          if (!(res instanceof ClientResponseError)) {
+            setSnackbarData({
+              color: 'success',
+              message: 'Pizzeria added succesfully!',
+              open: true,
+            });
+            navigate('/home');
+          }
+        })
+        .catch((err) => {
+          setSnackbarData({
+            color: 'error',
+            message: 'ERROR: Pizzeria not added!',
+            open: true,
+          });
+          console.log(err);
+        });
     } else {
-      console.log('no valid form');
+      setSnackbarData({
+        color: 'error',
+        message: 'ERROR: fill in the missing fields!',
+        open: true,
+      });
     }
   };
 
@@ -83,10 +132,15 @@ const NewReview = () => {
 
   useEffect(() => {
     if (citiesFound) {
-      setOptions(citiesFound.map((city) => city.formatted));
-      console.log(citiesFound.map((city) => city.formatted));
+      setCityOptions(citiesFound.map((city) => city.formatted));
     }
   }, [citiesFound]);
+
+  useEffect(() => {
+    if (pizzerias) {
+      setPizzeriaOptions(pizzerias.map((pizzeria) => pizzeria.name));
+    }
+  }, [pizzerias]);
 
   return (
     <div className="flex flex-col justify-center items-center w-full h-fit bg-white rounded pb-4">
@@ -139,14 +193,24 @@ const NewReview = () => {
           <Autocomplete
             className="text-primary font-bold w-[100%]"
             inputValue={city}
-            onInputChange={onInputChange}
+            onInputChange={onCityChange}
             onChange={(event: any, newValue: string | null) => {
-              if (newValue) {
+              if (newValue && citiesFound) {
                 setCity(newValue);
-                //query per fillare options pizzeria
+                const cityFound = citiesFound?.find(
+                  (city) => city.formatted === newValue
+                );
+                cityFound &&
+                  setCitySelect(
+                    buildCityNameFromResultComponents(cityFound.components)
+                  );
+              }
+              if (!newValue) {
+                setPizzeria('');
+                setPizzeriaOptions([]);
               }
             }}
-            options={options}
+            options={cityOptions}
             renderInput={(params) => (
               <TextField
                 placeholder="Select city"
@@ -162,9 +226,14 @@ const NewReview = () => {
         </LabelComponent>
         <LabelComponent label="Pizzeria">
           <Autocomplete
-            disabled={!city}
-            className="font-bold w-[100%]"
-            inputValue={''}
+            className="text-primary font-bold w-[100%]"
+            inputValue={pizzeria}
+            onInputChange={onPizzeriaChange}
+            onChange={(event: any, newValue: string | null) => {
+              if (newValue) {
+                setPizzeria(newValue);
+              }
+            }}
             options={pizzeriaOptions}
             renderInput={(params) => (
               <TextField
@@ -204,7 +273,7 @@ const NewReview = () => {
                 description,
                 img,
                 rate,
-                city,
+                city: citySelect,
                 pizzeria,
               })
             }

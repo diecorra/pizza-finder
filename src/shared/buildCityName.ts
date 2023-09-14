@@ -8,10 +8,12 @@ const valuesAttribute: cityType[] = [
   'village',
 ];
 
-export const buildCityName = (result: Components) =>
-  valuesAttribute.reduce((state, value) => {
-    if (result[value]) {
-      return state + '_' + result[value]!;
-    }
-    return state;
-  }, '');
+export const buildCityNameFromResultComponents = (result: Components) =>
+  valuesAttribute
+    .reduce((state, value) => {
+      if (result[value]) {
+        return state + '_' + result[value]!;
+      }
+      return state;
+    }, '')
+    .replace(/^_/, '');
