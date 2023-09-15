@@ -1,4 +1,5 @@
 import SearchIcon from '@mui/icons-material/Search';
+import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import pizzaicon from '../../assets/favicon-pizza.webp';
@@ -60,10 +61,3 @@ const Home = () => {
 };
 
 export default Home;
-function useQuery<T, U, V>(
-  arg0: string[],
-  arg1: () => Promise<any>,
-  arg2: { enabled: boolean }
-) {
-  throw new Error('Function not implemented.');
-}
