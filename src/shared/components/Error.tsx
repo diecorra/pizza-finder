@@ -1,5 +1,3 @@
-import { Alert } from '@mui/material';
-
 export interface ServerErrorProps {
   message?: string;
 }

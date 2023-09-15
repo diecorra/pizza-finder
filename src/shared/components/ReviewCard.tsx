@@ -10,9 +10,8 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { dateFormat } from '../dateFormat';
 
-export default function ReviewCard({ dataReview }: any) {
-  const { id, user, title, description, img, pizzeria, city, stars, created } =
-    dataReview;
+export default function ReviewCard(dataReview: any) {
+  const { user, title, description, img, pizzeria, rate, created } = dataReview;
 
   return (
     <Card className="max-w-[16rem] max-h-full border-4 border-black">
@@ -34,7 +33,7 @@ export default function ReviewCard({ dataReview }: any) {
           <h3>{title}</h3>
           <div className="flex">
             <StarIcon sx={{ color: 'orange' }} />
-            <p>{stars}</p>
+            <p>{rate}</p>
           </div>
         </div>
         <Typography variant="body2" color="text.secondary">
