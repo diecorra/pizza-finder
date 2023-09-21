@@ -41,8 +41,8 @@ const LastReviews = () => {
       {isError && <Error message={`Sorry, we couldn't find reviews!`} />}
       {reviews && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-16 content-center mb-4">
-          {reviews.map((r: Review) => {
-            return <ReviewCard key={r.id} dataReview={r} />;
+          {reviews.map((review: Review) => {
+            return <ReviewCard key={review.id} dataReview={review} />;
           })}
         </div>
       )}

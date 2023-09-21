@@ -10,7 +10,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { dateFormat } from '../dateFormat';
 
-export default function ReviewCard(dataReview: any) {
+export default function ReviewCard({ dataReview }: any) {
   const { user, title, description, img, pizzeria, rate, created } = dataReview;
 
   return (
@@ -19,7 +19,7 @@ export default function ReviewCard(dataReview: any) {
         avatar={
           <Tooltip title={user}>
             <Avatar className="bg-red-500" aria-label="recipe">
-              {user.charAt(0)}
+              {user?.charAt(0)}
             </Avatar>
           </Tooltip>
         }
