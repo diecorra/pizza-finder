@@ -39,7 +39,7 @@ const NewReview = () => {
     city: '',
     rate: 1,
   });
-  const [snackbarData, setSnackbarData] = React.useState<{
+  const [snackbarData, setSnackbarData] = useState<{
     color: AlertColor | undefined;
     message: string;
     open: boolean;
@@ -65,14 +65,14 @@ const NewReview = () => {
   );
 
   const onCityChange = (
-    event: React.SyntheticEvent<Element, Event>,
+    event: SyntheticEvent<Element, Event>,
     value: string
   ) => {
     setFormNewReview({ ...formNewReview, city: value });
   };
 
   const onPizzeriaChange = (
-    event: React.SyntheticEvent<Element, Event>,
+    event: SyntheticEvent<Element, Event>,
     value: string
   ) => {
     formNewReview.city
@@ -113,10 +113,7 @@ const NewReview = () => {
     }
   };
 
-  const handleClose = (
-    event: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
+  const handleClose = (event: SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }

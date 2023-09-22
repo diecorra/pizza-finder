@@ -11,7 +11,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { DataApiCity } from 'model/citiesProps';
 import { Pizzeria } from 'model/pizzeria';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
 import { addPizzeria } from 'services/auth/pizzerias.api';
 import { fetchCities } from 'services/fetchCities';
 import { buildCityNameFromResultComponents } from 'utils/buildCityName';
@@ -25,7 +25,7 @@ const NewPizzeria = () => {
     pizzeriaName: '',
   });
   const [optionLocation, setOptionLocation] = useState<string[]>([]);
-  const [snackbarData, setSnackbarData] = React.useState<{
+  const [snackbarData, setSnackbarData] = useState<{
     color: AlertColor | undefined;
     message: string;
     open: boolean;
@@ -71,10 +71,7 @@ const NewPizzeria = () => {
     }
   };
 
-  const handleClose = (
-    event: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
+  const handleClose = (event: SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }

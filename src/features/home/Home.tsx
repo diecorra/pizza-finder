@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import pizzaicon from 'assets/favicon-pizza.webp';
 import { AxiosError } from 'axios';
 import { DataApiCity } from 'model/citiesProps';
-import { useRef } from 'react';
+import { ChangeEvent, FormEvent, useRef } from 'react';
 import { fetchCities } from 'services/fetchCities';
 import { HOCData } from 'shared/HOCData';
 import TableData from 'shared/TableData';
@@ -21,14 +21,14 @@ const Home = () => {
   const { error, data } = infoUseQuery;
 
   const handleInputValue = (
-    text: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    text: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     if (text.target && text.target.value.match(/.{3,}/g)) {
       serchText.current = text.target.value;
     }
   };
 
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     infoUseQuery.refetch();
   };
