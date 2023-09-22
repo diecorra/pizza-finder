@@ -2,7 +2,7 @@ export interface CitiesProps {
   documentation: string;
   licenses: License[];
   rate: Rate;
-  results: Result[];
+  results: DataApiCity[];
   status: Status;
   stay_informed: StayInformed;
   thanks: string;
@@ -21,7 +21,7 @@ export interface Rate {
   reset: number;
 }
 
-export interface Result {
+export interface DataApiCity {
   annotations: Annotations;
   bounds: Bounds;
   components: Components;

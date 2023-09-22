@@ -9,7 +9,7 @@ body {
 }
 
 .page {
-  @apply max-w-screen-lg mx-auto pt-20 md:pt-24 px-3;
+  @apply min-h-[calc(100vh-3.5rem)] mx-auto pt-8 p-2 overflow-y-auto container;
 }
 
 .page-sm {
@@ -17,7 +17,7 @@ body {
 }
 
 .input-wrapper {
-  @apply bg-white rounded-lg h-12 shadow-blue-500/50 flex items-center;
+  @apply flex items-center gap-1;
 }
 
 input {
@@ -38,11 +38,7 @@ h2 {
   @apply text-2xl font-bold text-primary md:text-4xl z-10;
 }
 
-.btn {
-  @apply px-5 py-2 rounded-full m-1 font-bold text-sm text-center disabled:opacity-30 transition;
-}
-
-.button {
+/* .button {
   @apply btn bg-primary rounded-xl;
 }
 
@@ -50,4 +46,4 @@ button:disabled,
 button[disabled] {
   opacity: 0.6;
   cursor: not-allowed;
-}
+} */

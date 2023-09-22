@@ -20,6 +20,9 @@ export const useAuth = create<AuthState>((set) => ({
       set({ isLogged: AuthService.isLogged(), token: AuthService.getToken() });
     } catch (e) {
       set({ error: true, isLogged: false });
+      setTimeout(() => {
+        set({ error: false });
+      }, 3000);
     }
   },
   logout: () => {

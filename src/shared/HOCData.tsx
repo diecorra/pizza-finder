@@ -1,10 +1,17 @@
-import Error from './components/Error';
-import Spinner from './components/Spinner';
+import { UseQueryResult } from '@tanstack/react-query';
+import Error from './Error';
+import Spinner from './Spinner';
 
-export const HOCData = ({ children, infoUseQuery }: any) => {
+export const HOCData = <T,>({
+  children,
+  infoUseQuery,
+}: {
+  children: React.ReactNode;
+  infoUseQuery: UseQueryResult<T>;
+}) => {
   const { isLoading, error, isFetching } = infoUseQuery;
 
-  if (isLoading && isFetching) {
+  if (isLoading) {
     return <Spinner />;
   }
 

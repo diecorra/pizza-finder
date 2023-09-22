@@ -1,25 +1,21 @@
 import { Button } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { Review } from 'model/review';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Review } from '../../model/review';
-import { getFullListOrWithFilterPocketBase } from '../../services/pocketbase';
-import Error from '../../shared/components/Error';
-import ReviewCard from '../../shared/components/ReviewCard';
-import Spinner from '../../shared/components/Spinner';
+import { getFullListOrWithFilterPocketBase } from 'services/pocketbase';
+import { HOCData } from 'shared/HOCData';
+import ReviewCard from 'shared/ReviewCard';
+import { buttonStyle } from 'utils/style';
 
 const LastReviews = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const {
-    data: reviews,
-    isLoading,
-    isError,
-  } = useQuery([id], () =>
+  const infoUseQuery = useQuery([id], () =>
     getFullListOrWithFilterPocketBase('reviews', {
       filter: id ? `city = "${id}"` : '',
     })
   );
-
+  const { data: reviews } = infoUseQuery;
   return (
     <div className="flex justify-center items-center flex-col gap-8 content-center h-full">
       <h2>
@@ -28,32 +24,19 @@ const LastReviews = () => {
       <Button
         variant="contained"
         onClick={() => navigate('/newreview')}
-        style={{
-          ...textFieldStyle,
-          backgroundColor: 'whitesmoke',
-          minWidth: '130px',
-          color: '#0F172A',
-        }}
+        style={buttonStyle}
       >
         NEW REVIEW
       </Button>
-      {isLoading && <Spinner />}
-      {isError && <Error message={`Sorry, we couldn't find reviews!`} />}
-      {reviews && (
+      <HOCData<Review[] | undefined> infoUseQuery={infoUseQuery}>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-16 content-center mb-4">
-          {reviews.map((review: Review) => {
+          {reviews?.map((review: Review) => {
             return <ReviewCard key={review.id} dataReview={review} />;
           })}
         </div>
-      )}
+      </HOCData>
     </div>
   );
 };
 
 export default LastReviews;
-
-const textFieldStyle = {
-  fontFamily: 'Belanosima',
-  fontSize: '1.125rem',
-  backgroundColor: 'white',
-};

@@ -1,18 +1,18 @@
 import { Pizzeria } from '../../model/pizzeria';
 import { pb } from '../pocketbase';
 
-export function get() {
+export function getPizzeria() {
   return pb.collection('pizzerias').getList<Pizzeria>();
 }
 
-export function remove(id: string) {
+export function removePizzeria(id: string) {
   return pb.collection('pizzerias').delete(id);
 }
 
-export function add(pizzeria: Partial<Pizzeria>) {
+export function addPizzeria(pizzeria: Partial<Pizzeria>) {
   return pb.collection('pizzerias').create<Pizzeria>(pizzeria);
 }
 
-export function edit(pizzeria: Partial<Pizzeria>) {
+export function editPizzeria(pizzeria: Partial<Pizzeria>) {
   return pb.collection('pizzerias').update<Pizzeria>(pizzeria.id!, pizzeria);
 }

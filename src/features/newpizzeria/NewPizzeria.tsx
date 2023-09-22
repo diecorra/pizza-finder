@@ -1,3 +1,4 @@
+import AddBoxIcon from '@mui/icons-material/AddBox';
 import {
   Alert,
   AlertColor,
@@ -6,72 +7,61 @@ import {
   Snackbar,
   TextField,
 } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { ClientResponseError } from 'pocketbase';
-import React, { ChangeEvent, useEffect } from 'react';
-import { Result } from '../../model/citiesProps';
-import { Pizzeria } from '../../model/pizzeria';
-import { fetchCities } from '../../services/fetchCities';
-import { usePizzeriaService } from '../../services/pizzerias/usePizzeriasService';
-import { buildCityNameFromResultComponents } from '../../shared/buildCityName';
+import { DataApiCity } from 'model/citiesProps';
+import { Pizzeria } from 'model/pizzeria';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { addPizzeria } from 'services/auth/pizzerias.api';
+import { fetchCities } from 'services/fetchCities';
+import { buildCityNameFromResultComponents } from 'utils/buildCityName';
+import { buttonStyle, textFieldStyle } from 'utils/style';
 import LabelComponent from './LabelComponent';
 
 const NewPizzeria = () => {
-  const [city, setCity] = React.useState('');
-  const [street, setStreet] = React.useState('');
-  const [pizzeriaName, setPizzeriaName] = React.useState('');
-  const [options, setOptions] = React.useState<string[]>(['']);
+  const [formNewPizzeria, setFormNewPizzeria] = useState<any>({
+    city: '',
+    street: '',
+    pizzeriaName: '',
+  });
+  const [optionLocation, setOptionLocation] = useState<string[]>([]);
   const [snackbarData, setSnackbarData] = React.useState<{
     color: AlertColor | undefined;
     message: string;
     open: boolean;
   }>({ color: 'error', message: '', open: false });
-  const { state, addPizzeria } = usePizzeriaService();
+
   const {
     data: citiesFound,
     isLoading,
+    isFetching,
     isError,
-  } = useQuery<boolean, AxiosError<any, any>, Result[]>(
-    [city],
-    () => fetchCities(city),
-    { enabled: city.length > 3 }
+  } = useQuery<boolean, AxiosError<any, any>, DataApiCity[]>(
+    [formNewPizzeria.city],
+    () => fetchCities(formNewPizzeria.city)
   );
+
+  const mutationAddPizzeria = useMutation<
+    Pizzeria,
+    AxiosError<any, any>,
+    Pizzeria
+  >((pizzeriaInfo: Pizzeria) => addPizzeria(pizzeriaInfo));
 
   const onTextFieldChange = (e: any) => {
     if (e.target?.value) {
-      setCity(e.target.value);
+      setFormNewPizzeria({ ...formNewPizzeria, city: e.target.value });
     }
   };
 
-  console.log('citiesFound: ', citiesFound);
-
-  const handleSave = (name: string, location: string, street: string) => {
-    if (validForm(name, location, street) && citiesFound) {
-      const pizzeriaInfo: Pizzeria = {
-        name,
-        street,
-        city: buildCityNameFromResultComponents(citiesFound[0].components),
-      };
-      addPizzeria(pizzeriaInfo)
-        .then((res) => {
-          if (!(res instanceof ClientResponseError)) {
-            setSnackbarData({
-              color: 'success',
-              message: 'Pizzeria added succesfully!',
-              open: true,
-            });
-            clearForm();
-          }
-        })
-        .catch((err) => {
-          setSnackbarData({
-            color: 'error',
-            message: 'ERROR: Pizzeria not added!',
-            open: true,
-          });
-          console.log(err);
-        });
+  const handleSave = (pizzeria: Pizzeria) => {
+    if (
+      validForm(pizzeria?.name, pizzeria?.city, pizzeria?.street) &&
+      citiesFound
+    ) {
+      pizzeria.city = buildCityNameFromResultComponents(
+        citiesFound[0].components
+      );
+      mutationAddPizzeria.mutate(pizzeria);
     } else {
       setSnackbarData({
         color: 'error',
@@ -96,55 +86,83 @@ const NewPizzeria = () => {
   };
 
   const validForm = (name: string, location: string, street: string) => {
-    return name.length && location.length && street.length;
-  };
-
-  const clearForm = () => {
-    setStreet('');
-    setCity('');
-    setPizzeriaName('');
-    setOptions([]);
+    return name?.length && location?.length && street?.length;
   };
 
   useEffect(() => {
     if (citiesFound) {
-      setOptions(citiesFound.map((city) => city.formatted));
+      setOptionLocation(citiesFound.map((city) => city.formatted));
     }
   }, [citiesFound]);
 
+  useEffect(() => {
+    if (mutationAddPizzeria.isSuccess) {
+      clearForm();
+      setSnackbarData({
+        color: 'success',
+        message: 'Pizzeria added succesfully!',
+        open: true,
+      });
+    }
+  }, [mutationAddPizzeria.isSuccess]);
+
+  useEffect(() => {
+    if (mutationAddPizzeria.isError) {
+      setSnackbarData({
+        color: 'error',
+        message: 'ERROR: Pizzeria not added!',
+        open: true,
+      });
+      console.log(mutationAddPizzeria.error);
+    }
+  }, [mutationAddPizzeria.isError]);
+
+  const clearForm = () => {
+    setFormNewPizzeria({ city: '', street: '', pizzeriaName: '' });
+    setOptionLocation([]);
+  };
+
+  const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event?.target?.name) {
+      setFormNewPizzeria((old: any) => ({
+        ...old,
+        [event.target.name]: event.target.value,
+      }));
+    }
+  };
+
   return (
-    <div className="flex flex-col justify-center items-center w-full h-fit gap-4 bg-white rounded pb-4">
+    <div className="flex flex-col justify-center items-center w-full mx-auto h-fit gap-4 p-8 bg-white rounded">
       <h2 className="rounded p-4 w-full text-slate-900 text-center">
         Add New Pizzeria
       </h2>
       <form>
-        <div className="flex flex-col items-center gap-2 w-[25rem] px-3">
+        <div className="flex flex-col items-center gap-2  px-3">
           <LabelComponent label="Name">
             <TextField
-              value={pizzeriaName}
+              value={formNewPizzeria.pizzeriaName}
+              name="pizzeriaName"
               placeholder="type name.."
               style={textFieldStyle}
               fullWidth
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                if (event) {
-                  setPizzeriaName(event.target.value);
-                }
-              }}
+              onChange={handleOnChange}
             />
           </LabelComponent>
           <LabelComponent label="Location">
             <Autocomplete
-              className="bg-indigo-300 font-bold w-[100%]"
-              value={city}
+              className="bg-indigo-300 font-bold w-full"
+              value={formNewPizzeria.city}
               onChange={(event: any, newValue: string | null) => {
                 if (newValue) {
-                  setCity(newValue);
+                  setFormNewPizzeria((old: any) => ({
+                    ...old,
+                    city: newValue,
+                  }));
                 }
               }}
-              options={options}
+              options={optionLocation}
               renderInput={(params) => (
                 <TextField
-                  value={city}
                   onChange={onTextFieldChange}
                   placeholder="type city.."
                   {...params}
@@ -155,29 +173,22 @@ const NewPizzeria = () => {
           </LabelComponent>
           <LabelComponent label="Street">
             <TextField
-              value={street}
+              value={formNewPizzeria.street}
               placeholder="type street.."
+              name="street"
               style={textFieldStyle}
               fullWidth
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                if (event) {
-                  setStreet(event.target.value);
-                }
-              }}
+              onChange={handleOnChange}
             />
           </LabelComponent>
           <div className="flex items-center justify-end w-full">
             <Button
               variant="contained"
-              onClick={() => handleSave(pizzeriaName, city, street)}
-              style={{
-                ...textFieldStyle,
-                backgroundColor: 'whitesmoke',
-                minWidth: '130px',
-                color: '#0F172A',
-              }}
+              onClick={() => handleSave(formNewPizzeria)}
+              style={buttonStyle}
+              startIcon={<AddBoxIcon />}
             >
-              SAVE
+              ADD
             </Button>
           </div>
         </div>
@@ -200,9 +211,3 @@ const NewPizzeria = () => {
 };
 
 export default NewPizzeria;
-
-const textFieldStyle = {
-  fontFamily: 'Belanosima',
-  fontSize: '1.125rem',
-  backgroundColor: 'white',
-};

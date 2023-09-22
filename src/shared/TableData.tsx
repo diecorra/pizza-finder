@@ -1,3 +1,4 @@
+import { TableFooter } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -5,12 +6,11 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { DataApiCity } from 'model/citiesProps';
 import { useNavigate } from 'react-router-dom';
-import { TableProps } from '../vite-env';
-import { buildCityNameFromResultComponents } from './buildCityName';
+import { buildCityNameFromResultComponents } from 'utils/buildCityName';
 
-export default function TableData(props: TableProps) {
-  const { data: results } = props;
+export default function TableData({ data: results }: { data?: DataApiCity[] }) {
   const navigate = useNavigate();
 
   return (
@@ -67,6 +67,17 @@ export default function TableData(props: TableProps) {
               </TableCell>
             </TableRow>
           ))}
+          <TableFooter>
+            <TableRow>
+              <TableCell
+                component="footer"
+                align="right"
+                className="!text-primary text-2xl"
+              >
+                Results found: <b>{results?.length}</b>
+              </TableCell>
+            </TableRow>
+          </TableFooter>
         </TableBody>
       </Table>
     </TableContainer>

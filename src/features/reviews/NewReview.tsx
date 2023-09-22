@@ -1,3 +1,6 @@
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import SendIcon from '@mui/icons-material/Send';
 import {
   Alert,
   AlertColor,
@@ -7,34 +10,35 @@ import {
   Snackbar,
   TextField,
 } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { ClientResponseError } from 'pocketbase';
-import React, { ChangeEvent, SyntheticEvent, useEffect } from 'react';
+import LabelComponent from 'features/newpizzeria/LabelComponent';
+import { DataApiCity } from 'model/citiesProps';
+import { Review } from 'model/review';
+import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Result } from '../../model/citiesProps';
-import { Review } from '../../model/review';
-import { fetchCities } from '../../services/fetchCities';
-import { getFullListOrWithFilterPizzerias } from '../../services/pocketbase';
-import { useReviewService } from '../../services/reviews/useReviewsService';
-import { buildCityNameFromResultComponents } from '../../shared/buildCityName';
-import LabelComponent from '../newpizzeria/LabelComponent';
+import { addReview } from 'services/auth/reviews.api';
+import { fetchCities } from 'services/fetchCities';
+import { getFullListOrWithFilterPizzerias } from 'services/pocketbase';
+import { buildCityNameFromResultComponents } from 'utils/buildCityName';
+import { buttonStyle, textFieldStyle } from 'utils/style';
+import { useCloudinary } from './useCloudinary';
 
 const NewReview = () => {
   const navigate = useNavigate();
-  const [rate, setRate] = React.useState<number>(4);
-  const [city, setCity] = React.useState('');
-  const [citySelect, setCitySelect] = React.useState('');
-  const [cityOptions, setCityOptions] = React.useState<any>([
-    { label: 'prova', value: '' },
-  ]);
-  const [pizzeriaOptions, setPizzeriaOptions] = React.useState<string[]>([]);
-  const [name, setName] = React.useState<string>('');
-  const [title, setTitle] = React.useState<string>('');
-  const [description, setDescription] = React.useState<string>('');
-  const [pizzeria, setPizzeria] = React.useState<string>('');
-  const [img, setImg] = React.useState<string>('');
-  const { state, addReview } = useReviewService();
+  const { openWidget } = useCloudinary();
+  const [citySelect, setCitySelect] = useState('');
+  const [cityOptions, setCityOptions] = useState<any>([]);
+  const [pizzeriaOptions, setPizzeriaOptions] = useState<string[]>([]);
+  const [formNewReview, setFormNewReview] = useState<Review>({
+    user: '',
+    title: '',
+    description: '',
+    pizzeria: '',
+    img: '',
+    city: '',
+    rate: 1,
+  });
   const [snackbarData, setSnackbarData] = React.useState<{
     color: AlertColor | undefined;
     message: string;
@@ -45,10 +49,10 @@ const NewReview = () => {
     data: citiesFound,
     isLoading,
     isError,
-  } = useQuery<boolean, AxiosError<any, any>, Result[]>(
-    [city],
-    () => fetchCities(city),
-    { enabled: city.length > 3 }
+  } = useQuery<boolean, AxiosError<any, any>, DataApiCity[]>(
+    [formNewReview.city],
+    () => fetchCities(formNewReview.city),
+    { enabled: formNewReview.city.length > 3 }
   );
 
   const { data: pizzerias } = useQuery(
@@ -64,15 +68,23 @@ const NewReview = () => {
     event: React.SyntheticEvent<Element, Event>,
     value: string
   ) => {
-    setCity(value);
+    setFormNewReview({ ...formNewReview, city: value });
   };
 
   const onPizzeriaChange = (
     event: React.SyntheticEvent<Element, Event>,
     value: string
   ) => {
-    city ? setPizzeria(value) : setPizzeria('');
+    formNewReview.city
+      ? setFormNewReview({ ...formNewReview, pizzeria: value })
+      : setFormNewReview({ ...formNewReview, pizzeria: '' });
   };
+
+  function uploadHandler() {
+    openWidget().then((res) => {
+      setFormNewReview((img) => ({ ...img, ...res }));
+    });
+  }
 
   const validForm = (review: Review) => {
     return (
@@ -85,28 +97,13 @@ const NewReview = () => {
     );
   };
 
+  const mutationAddReview = useMutation<Review, AxiosError<any, any>, Review>(
+    (review: Review) => addReview(review)
+  );
+
   const handleSendReview = (review: Review) => {
     if (validForm(review)) {
-      console.log(review);
-      addReview(review)
-        .then((res) => {
-          if (!(res instanceof ClientResponseError)) {
-            setSnackbarData({
-              color: 'success',
-              message: 'Pizzeria added succesfully!',
-              open: true,
-            });
-            navigate('/home');
-          }
-        })
-        .catch((err) => {
-          setSnackbarData({
-            color: 'error',
-            message: 'ERROR: Pizzeria not added!',
-            open: true,
-          });
-          console.log(err);
-        });
+      mutationAddReview.mutate(review);
     } else {
       setSnackbarData({
         color: 'error',
@@ -130,6 +127,41 @@ const NewReview = () => {
     });
   };
 
+  const clearForm = () => {
+    setFormNewReview({
+      user: '',
+      title: '',
+      description: '',
+      pizzeria: '',
+      img: '',
+      city: '',
+      rate: 1,
+    });
+    //setOptionLocation([]);
+  };
+
+  useEffect(() => {
+    if (mutationAddReview.isSuccess) {
+      clearForm();
+      setSnackbarData({
+        color: 'success',
+        message: 'Review added succesfully!',
+        open: true,
+      });
+    }
+  }, [mutationAddReview.isSuccess]);
+
+  useEffect(() => {
+    if (mutationAddReview.isError) {
+      setSnackbarData({
+        color: 'error',
+        message: 'ERROR: Review not added!',
+        open: true,
+      });
+      console.log(mutationAddReview.error);
+    }
+  }, [mutationAddReview.isError]);
+
   useEffect(() => {
     if (citiesFound) {
       setCityOptions(citiesFound.map((city) => city.formatted));
@@ -144,32 +176,44 @@ const NewReview = () => {
 
   return (
     <div className="flex flex-col justify-center items-center w-full h-fit bg-white rounded pb-4">
-      <h2 className="rounded p-4 w-full text-slate-900 text-center">
-        How was your experience?
-      </h2>
-      <form className="w-80">
+      <div className="flex justify-center items-center ">
+        <ArrowBackIcon
+          onClick={() => navigate(-1)}
+          className="text-primary cursor-pointer"
+        />
+        <h2 className="rounded p-4 w-full text-slate-900 text-center">
+          How was your experience?
+        </h2>
+      </div>
+      <form>
         <LabelComponent label="Name">
           <TextField
-            value={name}
+            value={formNewReview.user}
             placeholder="type your name"
             style={textFieldStyle}
             fullWidth
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               if (event) {
-                setName(event.target.value);
+                setFormNewReview({
+                  ...formNewReview,
+                  user: event.target.value,
+                });
               }
             }}
           />
         </LabelComponent>
         <LabelComponent label="Title">
           <TextField
-            value={title}
+            value={formNewReview.title}
             placeholder="type title"
             style={textFieldStyle}
             fullWidth
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               if (event) {
-                setTitle(event.target.value);
+                setFormNewReview({
+                  ...formNewReview,
+                  title: event.target.value,
+                });
               }
             }}
           />
@@ -178,13 +222,16 @@ const NewReview = () => {
           <TextField
             multiline
             rows={6}
-            value={description}
+            value={formNewReview.description}
             placeholder="describe your experience"
             style={textFieldStyle}
             fullWidth
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               if (event) {
-                setDescription(event.target.value);
+                setFormNewReview({
+                  ...formNewReview,
+                  description: event.target.value,
+                });
               }
             }}
           />
@@ -192,11 +239,11 @@ const NewReview = () => {
         <LabelComponent label="City">
           <Autocomplete
             className="text-primary font-bold w-[100%]"
-            inputValue={city}
+            inputValue={formNewReview.city}
             onInputChange={onCityChange}
             onChange={(event: any, newValue: string | null) => {
               if (newValue && citiesFound) {
-                setCity(newValue);
+                setFormNewReview({ ...formNewReview, city: newValue });
                 const cityFound = citiesFound?.find(
                   (city) => city.formatted === newValue
                 );
@@ -206,7 +253,7 @@ const NewReview = () => {
                   );
               }
               if (!newValue) {
-                setPizzeria('');
+                setFormNewReview({ ...formNewReview, pizzeria: '' });
                 setPizzeriaOptions([]);
               }
             }}
@@ -227,11 +274,11 @@ const NewReview = () => {
         <LabelComponent label="Pizzeria">
           <Autocomplete
             className="text-primary font-bold w-[100%]"
-            inputValue={pizzeria}
+            inputValue={formNewReview.pizzeria}
             onInputChange={onPizzeriaChange}
             onChange={(event: any, newValue: string | null) => {
               if (newValue) {
-                setPizzeria(newValue);
+                setFormNewReview({ ...formNewReview, pizzeria: newValue });
               }
             }}
             options={pizzeriaOptions}
@@ -252,37 +299,31 @@ const NewReview = () => {
           <Rating
             name="rate-pizzeria"
             className="w-[100%]"
-            value={rate}
+            value={formNewReview.rate}
             onChange={(
               event: SyntheticEvent<Element, Event>,
               newRate: number | null
             ) => {
               if (newRate) {
-                setRate(newRate);
+                setFormNewReview({ ...formNewReview, rate: newRate });
               }
             }}
           />
         </LabelComponent>
-        <div className="flex items-center justify-end w-full">
+        <div className="flex items-center justify-between w-full">
           <Button
             variant="contained"
-            onClick={() =>
-              handleSendReview({
-                user: name,
-                title,
-                description,
-                img,
-                rate,
-                city: citySelect,
-                pizzeria,
-              })
-            }
-            style={{
-              ...textFieldStyle,
-              backgroundColor: 'whitesmoke',
-              minWidth: '130px',
-              color: '#0F172A',
-            }}
+            onClick={uploadHandler}
+            style={buttonStyle}
+            startIcon={<CloudUploadIcon />}
+          >
+            UPLOAD IMAGE
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => handleSendReview(formNewReview)}
+            style={buttonStyle}
+            startIcon={<SendIcon />}
           >
             SEND REVIEW
           </Button>
@@ -306,9 +347,3 @@ const NewReview = () => {
 };
 
 export default NewReview;
-
-const textFieldStyle = {
-  fontFamily: 'Belanosima',
-  fontSize: '1.125rem',
-  backgroundColor: 'white',
-};

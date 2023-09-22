@@ -7,4 +7,5 @@ export interface Review {
   pizzeria: string;
   city: string;
   rate: number;
+  created?: Date;
 }
