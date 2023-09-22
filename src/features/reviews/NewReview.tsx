@@ -185,7 +185,7 @@ const NewReview = () => {
           How was your experience?
         </h2>
       </div>
-      <form>
+      <form className="w-full md:w-auto px-2">
         <LabelComponent label="Name">
           <TextField
             value={formNewReview.user}
