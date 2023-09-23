@@ -9,7 +9,7 @@ export function NavBar() {
   return (
     <div className="w-full !sticky top-0 shadow-2xl z-50">
       <div className="bg-slate-900 flex justify-between items-center h-14 text-white w-full">
-        <ul className="flex items-center justify-center w-full list-none gap-10 text-xs sm:text-base">
+        <ul className="flex items-center justify-center w-full list-none gap-10 text-base sm:text-lg">
           <NavLink to="login">
             <Tooltip title="Admin Login">
               <AccountCircleIcon className="" />
