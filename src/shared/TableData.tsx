@@ -1,4 +1,4 @@
-import { TableFooter } from '@mui/material';
+import { TableFooter, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,26 +9,53 @@ import TableRow from '@mui/material/TableRow';
 import { DataApiCity } from 'model/citiesProps';
 import { useNavigate } from 'react-router-dom';
 import { buildCityNameFromResultComponents } from 'utils/buildCityName';
+import {
+  hover,
+  tableFooterStyle,
+  tableTextFieldStyle,
+  textFieldStyle,
+} from 'utils/style';
 
 export default function TableData({ data: results }: { data?: DataApiCity[] }) {
   const navigate = useNavigate();
 
   return (
-    <TableContainer component={Paper} className="mb-10">
-      <Table sx={{ minWidth: 300 }} aria-label="simple table">
+    <TableContainer component={Paper} className="h-auto w-80 max-w-2xl">
+      <Table
+        // sx={{ maxWidth: 300 }}
+        aria-label="simple table"
+        stickyHeader
+      >
         <TableHead className="bg-slate-100">
           <TableRow>
-            <TableCell>Country</TableCell>
-            <TableCell>City</TableCell>
-            <TableCell>PostCode</TableCell>
+            <TableCell
+              style={{ ...textFieldStyle, backgroundColor: 'whitesmoke' }}
+            >
+              Country
+            </TableCell>
+            <TableCell
+              style={{ ...textFieldStyle, backgroundColor: 'whitesmoke' }}
+            >
+              City
+            </TableCell>
+            <TableCell
+              style={{
+                ...textFieldStyle,
+                backgroundColor: 'whitesmoke',
+              }}
+            >
+              PostCode
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {results?.map((result) => (
             <TableRow
               key={result.formatted}
-              className="hover:bg-yellow-100 cursor-pointer"
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              className="cursor-pointer hover:bg-amber-100"
+              sx={{
+                '&:last-child td, &:last-child th': { border: 0 },
+              }}
               onClick={() =>
                 navigate(
                   `/reviews/${buildCityNameFromResultComponents(
@@ -40,14 +67,14 @@ export default function TableData({ data: results }: { data?: DataApiCity[] }) {
               <TableCell
                 component="th"
                 scope="row"
-                style={{ fontSize: '0.75rem' }}
+                style={{ ...tableTextFieldStyle }}
               >
                 {result.components.country}
               </TableCell>
               <TableCell
                 component="th"
                 scope="row"
-                style={{ fontSize: '0.75rem' }}
+                style={{ ...tableTextFieldStyle }}
               >
                 {[
                   result.components.county,
@@ -61,23 +88,21 @@ export default function TableData({ data: results }: { data?: DataApiCity[] }) {
               <TableCell
                 component="th"
                 scope="row"
-                style={{ fontSize: '0.75rem' }}
+                style={{ ...tableTextFieldStyle }}
               >
                 {result.components.postcode}
               </TableCell>
             </TableRow>
           ))}
-          <TableFooter>
-            <TableRow>
-              <TableCell
-                component="footer"
-                align="right"
-                className="!text-primary text-2xl"
-              >
-                Results found: <b>{results?.length}</b>
-              </TableCell>
-            </TableRow>
-          </TableFooter>
+          <TableRow className="bg-slate-50">
+            <TableCell sx={{ ...tableFooterStyle }}>
+              <Typography className="!text-sm" variant="body2" color={'black'}>
+                Results: <b>{results?.length}</b>
+              </Typography>
+            </TableCell>
+            <TableCell sx={{ ...tableFooterStyle }} />
+            <TableCell sx={{ ...tableFooterStyle }} />
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>

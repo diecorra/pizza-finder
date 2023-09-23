@@ -37,13 +37,3 @@ h1 {
 h2 {
   @apply text-2xl font-bold text-primary md:text-4xl z-10;
 }
-
-/* .button {
-  @apply btn bg-primary rounded-xl;
-}
-
-button:disabled,
-button[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
-} */

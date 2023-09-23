@@ -172,7 +172,7 @@ const NewReview = () => {
   }, [pizzerias]);
 
   return (
-    <div className="flex flex-col justify-center items-center w-full h-fit bg-white rounded pb-4">
+    <div className="flex flex-col justify-center items-center sm:w-full h-fit bg-white rounded pb-4">
       <div className="flex justify-center items-center ">
         <ArrowBackIcon
           onClick={() => navigate(-1)}

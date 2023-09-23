@@ -11,12 +11,12 @@ import TableData from 'shared/TableData';
 import { buttonStyle } from 'utils/style';
 
 const Home = () => {
-  const serchText = useRef('');
+  const searchText = useRef('');
 
   const infoUseQuery = useQuery<boolean, AxiosError<any, any>, DataApiCity[]>(
     ['city'],
-    () => fetchCities(serchText.current),
-    { enabled: serchText.current.length > 3 }
+    () => fetchCities(searchText.current),
+    { enabled: searchText.current.length > 3 }
   );
   const { error, data } = infoUseQuery;
 
@@ -24,7 +24,7 @@ const Home = () => {
     text: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     if (text.target && text.target.value.match(/.{3,}/g)) {
-      serchText.current = text.target.value;
+      searchText.current = text.target.value;
     }
   };
 
@@ -32,20 +32,21 @@ const Home = () => {
     e.preventDefault();
     infoUseQuery.refetch();
   };
+
   return (
-    <div className="flex flex-col justify-around gap-10 h-full">
+    <div className="flex flex-col justify-around gap-10 h-full w-full">
       <div className="flex items-center justify-center gap-1">
         <h1>PIZZA FINDER</h1>
         <img className="w-10" src={pizzaicon} alt="Pizza icon" />
       </div>
-      <div className="flex flex-col items-center gap-3 h-full">
+      <div className="flex flex-col items-center gap-3 h-full w-full">
         <form className="input-wrapper" onSubmit={handleSearch}>
           <TextField
             size="small"
             className="mx-3 bg-white rounded-lg"
             name="city"
             placeholder="Search city, town.."
-            inputRef={serchText}
+            inputRef={searchText}
             onChange={handleInputValue}
           />
           <Button className="mx-2" type="submit" size="large" sx={buttonStyle}>
@@ -56,9 +57,9 @@ const Home = () => {
           <HOCData<DataApiCity[]> infoUseQuery={infoUseQuery}>
             <TableData data={data}></TableData>
           </HOCData>
-        ) : (
+        ) : data !== undefined ? (
           <p>No results</p>
-        )}
+        ) : null}
       </div>
     </div>
   );

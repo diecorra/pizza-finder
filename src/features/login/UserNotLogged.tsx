@@ -36,6 +36,7 @@ const UserNotLogged = ({ formData, changeHandler, isValid, isLogged }: any) => {
         onSubmit={handleSubmit}
       >
         <TextField
+          className="rounded"
           name="username"
           type="text"
           value={formData.username}
@@ -44,6 +45,7 @@ const UserNotLogged = ({ formData, changeHandler, isValid, isLogged }: any) => {
           sx={textFieldStyle}
         />
         <TextField
+          className="rounded"
           name="password"
           type="password"
           placeholder="password"

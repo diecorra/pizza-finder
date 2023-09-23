@@ -47,11 +47,10 @@ export default function ReviewCard({ dataReview }: { dataReview: Review }) {
       </CardContent>
       {img ? (
         <CardMedia
-          className="h-full"
+          className="h-60 w-full object-cover"
           component="img"
           image={img}
           alt={pizzeria}
-          sx={{ objectFit: 'cover' }}
         />
       ) : null}
     </Card>
