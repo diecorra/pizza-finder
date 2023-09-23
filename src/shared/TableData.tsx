@@ -19,7 +19,10 @@ export default function TableData({ data: results }: { data?: DataApiCity[] }) {
   const navigate = useNavigate();
 
   return (
-    <TableContainer component={Paper} className="h-auto w-80 max-w-2xl">
+    <TableContainer
+      component={Paper}
+      className="h-[33rem] md:h-auto w-80 max-w-2xl"
+    >
       <Table aria-label="simple table" stickyHeader>
         <TableHead className="bg-slate-100">
           <TableRow>
@@ -89,7 +92,7 @@ export default function TableData({ data: results }: { data?: DataApiCity[] }) {
               </TableCell>
             </TableRow>
           ))}
-          <TableRow className="bg-slate-50">
+          <TableRow className="bg-slate-50 sticky bottom-0 border-0">
             <TableCell sx={{ ...tableFooterStyle }}>
               <Typography className="!text-sm" variant="body2" color={'black'}>
                 Results: <b>{results?.length}</b>
@@ -103,3 +106,6 @@ export default function TableData({ data: results }: { data?: DataApiCity[] }) {
     </TableContainer>
   );
 }
+
+//position: sticky;
+//bottom: 0;

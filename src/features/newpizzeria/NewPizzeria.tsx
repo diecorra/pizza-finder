@@ -22,7 +22,7 @@ const NewPizzeria = () => {
   const [formNewPizzeria, setFormNewPizzeria] = useState<any>({
     city: '',
     street: '',
-    pizzeriaName: '',
+    name: '',
   });
   const [optionLocation, setOptionLocation] = useState<string[]>([]);
   const [snackbarData, setSnackbarData] = useState<{
@@ -115,7 +115,7 @@ const NewPizzeria = () => {
   }, [mutationAddPizzeria.isError]);
 
   const clearForm = () => {
-    setFormNewPizzeria({ city: '', street: '', pizzeriaName: '' });
+    setFormNewPizzeria({ city: '', street: '', name: '' });
     setOptionLocation([]);
   };
 
@@ -137,8 +137,8 @@ const NewPizzeria = () => {
         <div className="flex flex-col items-center gap-2  px-3">
           <LabelComponent label="Name">
             <TextField
-              value={formNewPizzeria.pizzeriaName}
-              name="pizzeriaName"
+              value={formNewPizzeria.name}
+              name="name"
               placeholder="type name.."
               style={textFieldStyle}
               fullWidth

@@ -12,7 +12,6 @@ export const tableTextFieldStyle = {
 };
 
 export const tableFooterStyle = {
-  borderBottom: 'none',
   left: 0,
   bottom: 0,
   position: 'sticky',
