@@ -10,7 +10,6 @@ import { DataApiCity } from 'model/citiesProps';
 import { useNavigate } from 'react-router-dom';
 import { buildCityNameFromResultComponents } from 'utils/buildCityName';
 import {
-  hover,
   tableFooterStyle,
   tableTextFieldStyle,
   textFieldStyle,
@@ -21,11 +20,7 @@ export default function TableData({ data: results }: { data?: DataApiCity[] }) {
 
   return (
     <TableContainer component={Paper} className="h-auto w-80 max-w-2xl">
-      <Table
-        // sx={{ maxWidth: 300 }}
-        aria-label="simple table"
-        stickyHeader
-      >
+      <Table aria-label="simple table" stickyHeader>
         <TableHead className="bg-slate-100">
           <TableRow>
             <TableCell
