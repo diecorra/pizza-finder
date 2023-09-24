@@ -15,7 +15,7 @@ export default function ReviewCard({ dataReview }: { dataReview: Review }) {
   const { user, title, description, img, pizzeria, rate, created } = dataReview;
 
   return (
-    <Card className="max-w-[18rem] h-full flex flex-col justify-between">
+    <Card className="max-w-[20rem] min-h-[20rem] flex flex-col justify-between">
       <div>
         <CardHeader
           avatar={
