@@ -9,26 +9,22 @@ import {
   Rating,
   Snackbar,
   TextField,
+  Tooltip,
 } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import LabelComponent from 'features/newpizzeria/LabelComponent';
-import { DataApiCity } from 'model/citiesProps';
 import { Review } from 'model/review';
-import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { addReview } from 'services/auth/reviews.api';
-import { fetchCities } from 'services/fetchCities';
 import { getFullListOrWithFilterPizzerias } from 'services/pocketbase';
-import { buildCityNameFromResultComponents } from 'utils/buildCityName';
 import { buttonStyle, textFieldStyle } from 'utils/style';
 import { useCloudinary } from './useCloudinary';
 
 const NewReview = () => {
   const navigate = useNavigate();
   const { openWidget } = useCloudinary();
-  const [citySelect, setCitySelect] = useState('');
-  const [cityOptions, setCityOptions] = useState<any>([]);
   const [pizzeriaOptions, setPizzeriaOptions] = useState<string[]>([]);
   const [formNewReview, setFormNewReview] = useState<Review>({
     user: '',
@@ -39,45 +35,41 @@ const NewReview = () => {
     city: '',
     rate: 1,
   });
+
+  const isUserValid =
+    formNewReview?.user?.length >= 3 && formNewReview?.user?.length <= 24;
+  const isTitleValid =
+    formNewReview?.title?.length >= 3 && formNewReview?.title?.length <= 24;
+  const isDescriptionValid =
+    formNewReview?.description?.length >= 10 &&
+    formNewReview?.description?.length <= 150;
+  const isRateValid = formNewReview?.rate;
+  const isPizzeriaValid = formNewReview?.pizzeria?.length;
+
+  const isValid =
+    isUserValid &&
+    isTitleValid &&
+    isDescriptionValid &&
+    isRateValid &&
+    isPizzeriaValid;
+
   const [snackbarData, setSnackbarData] = useState<{
     color: AlertColor | undefined;
     message: string;
     open: boolean;
   }>({ color: 'error', message: '', open: false });
 
-  const {
-    data: citiesFound,
-    isLoading,
-    isError,
-  } = useQuery<boolean, AxiosError<any, any>, DataApiCity[]>(
-    [formNewReview.city],
-    () => fetchCities(formNewReview.city),
-    { enabled: formNewReview.city.length > 3 }
-  );
-
   const { data: pizzerias } = useQuery(
-    [citySelect],
-    () =>
-      getFullListOrWithFilterPizzerias('pizzerias', {
-        filter: citySelect ? `city = "${citySelect}"` : '',
-      }),
-    { enabled: !!citySelect }
+    [],
+    () => getFullListOrWithFilterPizzerias('pizzerias', {}),
+    { enabled: true }
   );
-
-  const onCityChange = (
-    event: SyntheticEvent<Element, Event>,
-    value: string
-  ) => {
-    setFormNewReview({ ...formNewReview, city: value });
-  };
 
   const onPizzeriaChange = (
     event: SyntheticEvent<Element, Event>,
     value: string
   ) => {
-    formNewReview.city
-      ? setFormNewReview({ ...formNewReview, pizzeria: value })
-      : setFormNewReview({ ...formNewReview, pizzeria: '' });
+    setFormNewReview({ ...formNewReview, pizzeria: value });
   };
 
   function uploadHandler() {
@@ -92,7 +84,6 @@ const NewReview = () => {
       review.title.length &&
       review.description.length &&
       review.rate &&
-      review.city.length &&
       review.pizzeria.length
     );
   };
@@ -102,7 +93,7 @@ const NewReview = () => {
   );
 
   const handleSendReview = (review: Review) => {
-    if (validForm(review)) {
+    if (validForm(review) && pizzerias) {
       mutationAddReview.mutate(review);
     } else {
       setSnackbarData({
@@ -134,7 +125,6 @@ const NewReview = () => {
       city: '',
       rate: 1,
     });
-    //setOptionLocation([]);
   };
 
   useEffect(() => {
@@ -160,16 +150,22 @@ const NewReview = () => {
   }, [mutationAddReview.isError]);
 
   useEffect(() => {
-    if (citiesFound) {
-      setCityOptions(citiesFound.map((city) => city.formatted));
-    }
-  }, [citiesFound]);
-
-  useEffect(() => {
     if (pizzerias) {
       setPizzeriaOptions(pizzerias.map((pizzeria) => pizzeria.name));
     }
   }, [pizzerias]);
+
+  useEffect(() => {
+    if (formNewReview?.pizzeria) {
+      const pizzeriaRecordSelected = pizzerias?.filter(
+        (pizzeria) => pizzeria.name === formNewReview.pizzeria
+      );
+      setFormNewReview({
+        ...formNewReview,
+        city: pizzeriaRecordSelected ? pizzeriaRecordSelected[0].city : '',
+      });
+    }
+  }, [formNewReview?.pizzeria]);
 
   return (
     <div className="flex flex-col justify-center items-center sm:w-full h-fit bg-white rounded pb-4">
@@ -182,9 +178,14 @@ const NewReview = () => {
           How was your experience?
         </h2>
       </div>
-      <form className="w-full md:w-auto px-2">
+      <form className="w-full md:w-96 px-2">
         <LabelComponent label="Name">
           <TextField
+            helperText={!isUserValid ? 'dato obbligatorio' : ' '}
+            inputProps={{
+              maxLength: 24,
+            }}
+            error={!isUserValid}
             value={formNewReview.user}
             placeholder="type your name"
             style={textFieldStyle}
@@ -201,6 +202,8 @@ const NewReview = () => {
         </LabelComponent>
         <LabelComponent label="Title">
           <TextField
+            helperText={!isUserValid ? 'dato obbligatorio' : ' '}
+            error={!isTitleValid}
             value={formNewReview.title}
             placeholder="type title"
             style={textFieldStyle}
@@ -213,10 +216,16 @@ const NewReview = () => {
                 });
               }
             }}
+            inputProps={{
+              maxLength: 24,
+            }}
           />
         </LabelComponent>
         <LabelComponent label="Description">
           <TextField
+            helperText={!isUserValid ? 'dato obbligatorio' : ' '}
+            className={isDescriptionValid ? '' : ''}
+            error={!isDescriptionValid}
             multiline
             rows={6}
             value={formNewReview.description}
@@ -231,41 +240,9 @@ const NewReview = () => {
                 });
               }
             }}
-          />
-        </LabelComponent>
-        <LabelComponent label="City">
-          <Autocomplete
-            className="text-primary font-bold w-[100%]"
-            inputValue={formNewReview.city}
-            onInputChange={onCityChange}
-            onChange={(event: any, newValue: string | null) => {
-              if (newValue && citiesFound) {
-                setFormNewReview({ ...formNewReview, city: newValue });
-                const cityFound = citiesFound?.find(
-                  (city) => city.formatted === newValue
-                );
-                cityFound &&
-                  setCitySelect(
-                    buildCityNameFromResultComponents(cityFound.components)
-                  );
-              }
-              if (!newValue) {
-                setFormNewReview({ ...formNewReview, pizzeria: '' });
-                setPizzeriaOptions([]);
-              }
+            inputProps={{
+              maxLength: 150,
             }}
-            options={cityOptions}
-            renderInput={(params) => (
-              <TextField
-                placeholder="Select city"
-                {...params}
-                style={{
-                  fontFamily: 'Belanosima',
-                  fontSize: '1.125rem',
-                  backgroundColor: 'white',
-                }}
-              />
-            )}
           />
         </LabelComponent>
         <LabelComponent label="Pizzeria">
@@ -281,6 +258,8 @@ const NewReview = () => {
             options={pizzeriaOptions}
             renderInput={(params) => (
               <TextField
+                helperText={!isUserValid ? 'dato obbligatorio' : ' '}
+                error={!isPizzeriaValid}
                 placeholder="Select pizzeria"
                 {...params}
                 style={{
@@ -312,17 +291,28 @@ const NewReview = () => {
             variant="contained"
             onClick={uploadHandler}
             style={buttonStyle}
-            startIcon={<CloudUploadIcon />}
+            startIcon={
+              <Tooltip
+                title={
+                  formNewReview.img ? 'Image uploaded' : 'Image not uploaded'
+                }
+              >
+                <CloudUploadIcon
+                  style={{ color: formNewReview.img ? 'green' : 'red' }}
+                />
+              </Tooltip>
+            }
           >
             UPLOAD IMAGE
           </Button>
           <Button
+            className={isValid ? '' : 'opacity-50 pointer-events-none'}
             variant="contained"
             onClick={() => handleSendReview(formNewReview)}
             style={buttonStyle}
             startIcon={<SendIcon />}
           >
-            SEND REVIEW
+            SEND
           </Button>
         </div>
         <Snackbar

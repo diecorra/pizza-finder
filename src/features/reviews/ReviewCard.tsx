@@ -1,3 +1,4 @@
+import CloseIcon from '@mui/icons-material/Close';
 import StarIcon from '@mui/icons-material/Star';
 import {
   Avatar,
@@ -32,7 +33,7 @@ export default function ReviewCard({ dataReview }: { dataReview: Review }) {
           titleTypographyProps={{
             fontSize: '0.85rem',
             fontWeight: 'bold',
-            overflowWrap: 'break-word',
+            //overflowWrap: 'break-word',
           }}
           subheaderTypographyProps={{ fontSize: '0.7rem' }}
         />
@@ -55,17 +56,34 @@ export default function ReviewCard({ dataReview }: { dataReview: Review }) {
       </div>
       {img ? (
         <CardMedia
-          className={
-            !isImgClicked
-              ? 'h-24 w-full object-cover hover:cursor-pointer'
-              : 'hidden absolute z-[100] top-0 left-0 max-w-sm max-w-sm bg-contain bg-no-repeat bg-center bg-black hover:cursor-pointer'
-          }
+          className="cursor-pointer"
           component="img"
           image={img}
           alt={pizzeria}
           onClick={() => setIsImgClicked(!isImgClicked)}
         />
       ) : null}
+      {isImgClicked && img && (
+        <div
+          className="fixed z-50 bg-slate-900/50 inset-0"
+          onClick={() => setIsImgClicked(!isImgClicked)}
+        >
+          <div className="absolute z-[100] -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-3/4 md:w-auto max-h-full md:max-h-[80vh] bg-center bg-no-repeat">
+            <img
+              className="bg-contain max-h-[inherit] bg-right-top"
+              draggable={false}
+              src={img}
+              alt={pizzeria}
+              onClick={(e) => e.stopPropagation()}
+            />
+            <CloseIcon
+              fontSize={'large'}
+              className="fixed top-1 right-1 text-white cursor-pointer"
+              onClick={() => setIsImgClicked(!isImgClicked)}
+            />
+          </div>
+        </div>
+      )}
     </Card>
   );
 }

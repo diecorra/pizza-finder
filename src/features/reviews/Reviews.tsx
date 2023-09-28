@@ -1,10 +1,10 @@
 import { Button } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import ReviewCard from 'features/reviews/ReviewCard';
 import { Review } from 'model/review';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getFullListOrWithFilterPocketBase } from 'services/pocketbase';
 import { HOCData } from 'shared/HOCData';
-import ReviewCard from 'features/reviews/ReviewCard';
 import { buttonStyle } from 'utils/style';
 
 const LastReviews = () => {
