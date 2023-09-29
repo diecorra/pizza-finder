@@ -181,7 +181,7 @@ const NewReview = () => {
       <form className="w-full md:w-96 px-2">
         <LabelComponent label="Name">
           <TextField
-            helperText={!isUserValid ? 'dato obbligatorio' : ' '}
+            helperText={!isUserValid ? 'Fill this textfield!' : ' '}
             inputProps={{
               maxLength: 24,
             }}
@@ -202,7 +202,7 @@ const NewReview = () => {
         </LabelComponent>
         <LabelComponent label="Title">
           <TextField
-            helperText={!isUserValid ? 'dato obbligatorio' : ' '}
+            helperText={!isTitleValid ? 'Fill this textfield!' : ' '}
             error={!isTitleValid}
             value={formNewReview.title}
             placeholder="type title"
@@ -223,7 +223,7 @@ const NewReview = () => {
         </LabelComponent>
         <LabelComponent label="Description">
           <TextField
-            helperText={!isUserValid ? 'dato obbligatorio' : ' '}
+            helperText={!isDescriptionValid ? 'Fill this textfield!' : ' '}
             className={isDescriptionValid ? '' : ''}
             error={!isDescriptionValid}
             multiline
@@ -258,7 +258,7 @@ const NewReview = () => {
             options={pizzeriaOptions}
             renderInput={(params) => (
               <TextField
-                helperText={!isUserValid ? 'dato obbligatorio' : ' '}
+                helperText={!isPizzeriaValid ? 'Fill this textfield!' : ' '}
                 error={!isPizzeriaValid}
                 placeholder="Select pizzeria"
                 {...params}
