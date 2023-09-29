@@ -25,7 +25,10 @@ import { useCloudinary } from './useCloudinary';
 const NewReview = () => {
   const navigate = useNavigate();
   const { openWidget } = useCloudinary();
-  const [pizzeriaOptions, setPizzeriaOptions] = useState<string[]>([]);
+  const [pizzeriaOptions, setPizzeriaOptions] = useState<
+    { label: string; value: string }[]
+  >([]);
+  const [openTooltip, setOpenTooltip] = useState(false);
   const [formNewReview, setFormNewReview] = useState<Review>({
     user: '',
     title: '',
@@ -151,7 +154,14 @@ const NewReview = () => {
 
   useEffect(() => {
     if (pizzerias) {
-      setPizzeriaOptions(pizzerias.map((pizzeria) => pizzeria.name));
+      setPizzeriaOptions(
+        pizzerias.map((pizzeria) => {
+          return {
+            label: `${pizzeria.name} (${pizzeria.city})`,
+            value: pizzeria.name,
+          };
+        })
+      );
     }
   }, [pizzerias]);
 
@@ -164,6 +174,8 @@ const NewReview = () => {
         ...formNewReview,
         city: pizzeriaRecordSelected ? pizzeriaRecordSelected[0].city : '',
       });
+      console.log('formNewReview: ', formNewReview);
+      console.log('pizzeriaRecordSelected: ', pizzeriaRecordSelected);
     }
   }, [formNewReview?.pizzeria]);
 
@@ -248,11 +260,15 @@ const NewReview = () => {
         <LabelComponent label="Pizzeria">
           <Autocomplete
             className="text-primary font-bold w-[100%]"
+            loading={true}
             inputValue={formNewReview.pizzeria}
             onInputChange={onPizzeriaChange}
-            onChange={(event: any, newValue: string | null) => {
+            onChange={(event: any, newValue: any | null) => {
               if (newValue) {
-                setFormNewReview({ ...formNewReview, pizzeria: newValue });
+                setFormNewReview({
+                  ...formNewReview,
+                  pizzeria: newValue.value,
+                });
               }
             }}
             options={pizzeriaOptions}
