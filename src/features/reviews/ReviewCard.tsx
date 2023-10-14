@@ -4,8 +4,11 @@ import {
   Alert,
   AlertColor,
   Avatar,
+  Box,
+  Button,
   CardHeader,
   CardMedia,
+  Modal,
   Snackbar,
   Tooltip,
   Typography,
@@ -13,7 +16,7 @@ import {
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { Review } from 'model/review';
-import { SyntheticEvent, useState } from 'react';
+import { useState } from 'react';
 import { dateFormat } from 'utils/dateFormat';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { removeReview } from 'services/auth/reviews.api';
@@ -24,41 +27,18 @@ export default function ReviewCard({ dataReview }: { dataReview: Review }) {
     dataReview;
   const [isImgClicked, setIsImgClicked] = useState(false);
   const isLogged = useAuth(selectAuthIsLogged);
-  const [snackbarData, setSnackbarData] = useState<{
-    color: AlertColor | undefined;
-    message: string;
-    open: boolean;
-  }>({ color: 'error', message: '', open: false });
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleDeleteReview = async (id: string) => {
     if (isLogged && id) {
       try {
         await removeReview(id);
-        setSnackbarData({
-          color: 'success',
-          message: 'Review deleted succesfully!',
-          open: true,
-        });
       } catch (error) {
-        setSnackbarData({
-          color: 'error',
-          message: 'ERROR: Review not deleted!',
-          open: true,
-        });
         console.log('Error on deleting review: ', error);
       }
     }
-  };
-
-  const handleClose = (event: SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbarData({
-      color: 'error',
-      message: '',
-      open: false,
-    });
   };
 
   return (
@@ -86,7 +66,7 @@ export default function ReviewCard({ dataReview }: { dataReview: Review }) {
             >
               <DeleteIcon
                 className={isLogged ? 'cursor-pointer' : 'text-gray-400'}
-                onClick={() => handleDeleteReview(id || '')}
+                onClick={handleOpen}
               />
             </Tooltip>
           }
@@ -138,19 +118,46 @@ export default function ReviewCard({ dataReview }: { dataReview: Review }) {
           </div>
         </div>
       )}
-      <Snackbar
-        open={snackbarData.open}
-        autoHideDuration={6000}
+      <Modal
+        open={open}
         onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
-        <Alert
-          onClose={handleClose}
-          severity={snackbarData.color}
-          sx={{ width: '100%' }}
-        >
-          {snackbarData.message}
-        </Alert>
-      </Snackbar>
+        <Box sx={style}>
+          <div className="flex flex-col gap-10">
+            <Typography variant="h6" className="!text-primary">
+              Delete selected review?
+            </Typography>
+            <div className="flex justify-between">
+              <Button
+                className="!bg-primary !text-stone-200"
+                onClick={() => handleDeleteReview(id || '')}
+              >
+                Yes
+              </Button>
+              <Button
+                className="!bg-secondary !text-stone-200"
+                onClick={handleClose}
+              >
+                No
+              </Button>
+            </div>
+          </div>
+        </Box>
+      </Modal>
     </Card>
   );
 }
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 360,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
