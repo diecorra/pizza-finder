@@ -26,9 +26,8 @@ const NewReview = () => {
   const navigate = useNavigate();
   const { openWidget } = useCloudinary();
   const [pizzeriaOptions, setPizzeriaOptions] = useState<
-    { label: string; value: string }[]
+    { id: string; label: string; value: string }[]
   >([]);
-  const [openTooltip, setOpenTooltip] = useState(false);
   const [formNewReview, setFormNewReview] = useState<Review>({
     user: '',
     title: '',
@@ -157,6 +156,7 @@ const NewReview = () => {
       setPizzeriaOptions(
         pizzerias.map((pizzeria) => {
           return {
+            id: pizzeria.id || '',
             label: `${pizzeria.name} (${pizzeria.city})`,
             value: pizzeria.name,
           };
@@ -164,20 +164,6 @@ const NewReview = () => {
       );
     }
   }, [pizzerias]);
-
-  useEffect(() => {
-    if (formNewReview?.pizzeria) {
-      const pizzeriaRecordSelected = pizzerias?.filter(
-        (pizzeria) => pizzeria.name === formNewReview.pizzeria
-      );
-      setFormNewReview({
-        ...formNewReview,
-        city: pizzeriaRecordSelected ? pizzeriaRecordSelected[0].city : '',
-      });
-      console.log('formNewReview: ', formNewReview);
-      console.log('pizzeriaRecordSelected: ', pizzeriaRecordSelected);
-    }
-  }, [formNewReview?.pizzeria]);
 
   return (
     <div className="flex flex-col justify-center items-center sm:w-full h-fit bg-white rounded pb-4">
@@ -267,6 +253,10 @@ const NewReview = () => {
               if (newValue) {
                 setFormNewReview({
                   ...formNewReview,
+                  city:
+                    pizzerias?.filter(
+                      (pizzeria) => pizzeria.name === newValue.value
+                    )[0].city || '',
                   pizzeria: newValue.value,
                 });
               }

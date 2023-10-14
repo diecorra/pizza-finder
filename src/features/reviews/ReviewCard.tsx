@@ -28,7 +28,7 @@ export default function ReviewCard({ dataReview }: { dataReview: Review }) {
               </Avatar>
             </Tooltip>
           }
-          title={pizzeria}
+          title={pizzeria.replaceAll('_', ',')}
           subheader={created ? dateFormat(created) : dateFormat(new Date())}
           titleTypographyProps={{
             fontSize: '0.85rem',
