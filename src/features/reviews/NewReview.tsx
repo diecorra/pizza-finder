@@ -95,15 +95,7 @@ const NewReview = () => {
   );
 
   const handleSendReview = (review: Review) => {
-    if (validForm(review) && pizzerias) {
-      mutationAddReview.mutate(review);
-    } else {
-      setSnackbarData({
-        color: 'error',
-        message: 'ERROR: fill in the missing fields!',
-        open: true,
-      });
-    }
+    mutationAddReview.mutate(review);
   };
 
   const handleClose = (event: SyntheticEvent | Event, reason?: string) => {
@@ -130,17 +122,6 @@ const NewReview = () => {
   };
 
   useEffect(() => {
-    if (mutationAddReview.isSuccess) {
-      clearForm();
-      setSnackbarData({
-        color: 'success',
-        message: 'Review added succesfully!',
-        open: true,
-      });
-    }
-  }, [mutationAddReview.isSuccess]);
-
-  useEffect(() => {
     if (mutationAddReview.isError) {
       setSnackbarData({
         color: 'error',
@@ -150,6 +131,17 @@ const NewReview = () => {
       console.log(mutationAddReview.error);
     }
   }, [mutationAddReview.isError]);
+
+  useEffect(() => {
+    if (mutationAddReview.isSuccess) {
+      clearForm();
+      setSnackbarData({
+        color: 'success',
+        message: 'Review added succesfully!',
+        open: true,
+      });
+    }
+  }, [mutationAddReview.isSuccess]);
 
   useEffect(() => {
     if (pizzerias) {

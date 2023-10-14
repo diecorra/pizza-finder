@@ -2,6 +2,7 @@ import { Button } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import ReviewCard from 'features/reviews/ReviewCard';
 import { Review } from 'model/review';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getFullListOrWithFilterPocketBase } from 'services/pocketbase';
 import { HOCData } from 'shared/HOCData';
@@ -13,9 +14,15 @@ const LastReviews = () => {
   const infoUseQuery = useQuery([id], () =>
     getFullListOrWithFilterPocketBase('reviews', {
       filter: id ? `city = "${id}"` : '',
+      sort: '-created',
     })
   );
-  const { data: reviews } = infoUseQuery;
+  const { data: reviews, refetch } = infoUseQuery;
+
+  useEffect(() => {
+    refetch();
+  }, [reviews]);
+
   return (
     <div className="flex justify-center items-center flex-col gap-8 content-center h-full">
       <h2>
