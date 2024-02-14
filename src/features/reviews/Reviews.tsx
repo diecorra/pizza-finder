@@ -35,7 +35,7 @@ const LastReviews = () => {
       >
         NEW REVIEW
       </Button>
-      <HOCData<Review[] | undefined> infoUseQuery={infoUseQuery}>
+      <HOCData infoQuery={infoUseQuery}>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-16">
           {reviews?.map((review: Review) => {
             return <ReviewCard key={review.id} dataReview={review} />;
