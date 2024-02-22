@@ -5,13 +5,15 @@ import { ReactNode } from 'react';
 export const HOCData = ({
   children,
   infoQuery,
+  skeleton = <Spinner />,
 }: {
   children: ReactNode;
+  skeleton?: ReactNode;
   infoQuery: { isLoading: boolean; isError: boolean };
 }) => {
   const { isLoading, isError } = infoQuery;
   if (isLoading) {
-    return <Spinner />;
+    return skeleton;
   }
 
   if (isError) {

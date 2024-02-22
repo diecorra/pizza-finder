@@ -1,28 +1,17 @@
-import { Button } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import ReviewCard from 'features/reviews/ReviewCard';
+import { Button, Skeleton } from '@mui/material';
+import ReviewCard from 'features/reviews/reviewCard/ReviewCard';
 import { Review } from 'model/review';
-import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getFullListOrWithFilterPocketBase } from 'services/pocketbase';
+
 import { HOCData } from 'shared/HOCData';
 import { buttonStyle } from 'utils/style';
+import useReview from './useReview';
 
 const LastReviews = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const infoUseQuery = useQuery([id], () =>
-    getFullListOrWithFilterPocketBase('reviews', {
-      filter: id ? `city = "${id}"` : '',
-      sort: '-created',
-    })
-  );
-  const { data: reviews, refetch } = infoUseQuery;
-
-  useEffect(() => {
-    refetch();
-  }, [reviews]);
-
+  const { infoQuery } = useReview({ id });
+  const { data: reviews } = infoQuery;
   return (
     <div className="flex justify-center items-center flex-col gap-8 content-center h-full">
       <h2>
@@ -35,13 +24,18 @@ const LastReviews = () => {
       >
         NEW REVIEW
       </Button>
-      <HOCData infoQuery={infoUseQuery}>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-16">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-16">
+        <HOCData
+          infoQuery={infoQuery}
+          skeleton={new Array(6).fill(0).map(() => (
+            <Skeleton variant="rounded" width={'24rem'} height={'24rem'} />
+          ))}
+        >
           {reviews?.map((review: Review) => {
             return <ReviewCard key={review.id} dataReview={review} />;
           })}
-        </div>
-      </HOCData>
+        </HOCData>
+      </div>
     </div>
   );
 };
