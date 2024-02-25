@@ -18,13 +18,13 @@ import { Review } from 'model/review';
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { addReview } from 'services/auth/reviews.api';
+import { cloudinary } from 'services/cloudinary';
 import { getFullListOrWithFilterPizzerias } from 'services/pocketbase';
 import { buttonStyle, textFieldStyle } from 'utils/style';
-import { useCloudinary } from './useCloudinary';
 
 const NewReview = () => {
   const navigate = useNavigate();
-  const { openWidget } = useCloudinary();
+  const { openWidget } = cloudinary();
   const [pizzeriaOptions, setPizzeriaOptions] = useState<
     { id: string; label: string; value: string }[]
   >([]);
