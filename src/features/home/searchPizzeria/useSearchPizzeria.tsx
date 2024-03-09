@@ -1,8 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { DataApiCity } from 'model/citiesProps';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { fetchCities } from 'services/fetchCities';
+import { useFetchCities } from 'services/fetchCities';
 
 const useSearchPizzeria = ({
   searchText,
@@ -10,11 +7,7 @@ const useSearchPizzeria = ({
   searchText: React.MutableRefObject<HTMLInputElement | undefined>;
 }) => {
   const [disableSearch, setDisableSearch] = useState(true);
-  const infoUseQuery = useQuery<boolean, AxiosError<any, any>, DataApiCity[]>(
-    ['city'],
-    () => fetchCities(searchText.current?.value ?? ''),
-    { enabled: false }
-  );
+  const infoUseQuery = useFetchCities(searchText.current?.value ?? '');
   const handleResearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.code == 'Enter') {
       infoUseQuery.refetch();
@@ -42,6 +35,7 @@ const useSearchPizzeria = ({
     data: infoUseQuery.data,
     isFetched: infoUseQuery.isFetched,
   };
+
   return {
     infoQuery,
     handleInputValue,

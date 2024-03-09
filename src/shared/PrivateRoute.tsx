@@ -2,8 +2,8 @@ import { PropsWithChildren } from 'react';
 import { Navigate } from 'react-router-dom';
 import { selectAuthIsLogged, useAuth } from 'services/auth';
 
-export function PrivateRoute(props: PropsWithChildren) {
+export function PrivateRoute({ children }: PropsWithChildren) {
   const isLogged = useAuth(selectAuthIsLogged);
 
-  return <>{isLogged ? props.children : <Navigate to="/login" />}</>;
+  return <>{isLogged ? children : <Navigate to="/login" />}</>;
 }
