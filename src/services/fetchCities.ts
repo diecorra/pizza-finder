@@ -16,14 +16,12 @@ export const fetchCities = async (city: string) => {
   const result = await axios.get<CitiesProps>(
     ` https://api.opencagedata.com/geocode/v1/json?key=${APIKEY}&q=${city}`
   );
-
-  return filteredCityAndVillageResults(result.data?.results);
-};
-
-const filteredCityAndVillageResults = (results: DataApiCity[]) => {
-  return results.filter(
-    (result: DataApiCity) =>
-      result.components._type === 'city' ||
-      result.components._type === 'village'
+  const filteredCityAndVillageResults = result.data?.results.filter(
+    (result: DataApiCity) => filterCityAndVillage(result.components._type)
   );
+
+  return filteredCityAndVillageResults;
 };
+
+const filterCityAndVillage = (type: string) =>
+  type === 'city' || type === 'village';
