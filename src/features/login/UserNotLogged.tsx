@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { selectAuthError, useAuth } from 'services/auth';
 import Error from 'shared/Error';
 import Spinner from 'shared/Spinner';
-import { buttonStyle, textFieldStyle } from 'utils/style';
+import { textFieldStyle } from 'utils/style';
 
 const UserNotLogged = ({ formData, changeHandler, isValid, isLogged }: any) => {
   const [loading, setLoading] = useState(false);
@@ -56,7 +56,7 @@ const UserNotLogged = ({ formData, changeHandler, isValid, isLogged }: any) => {
         {loading ? (
           <Spinner />
         ) : (
-          <Button disabled={!isValid} type="submit" sx={buttonStyle}>
+          <Button disabled={!isValid} type="submit" className="button">
             SIGN IN
           </Button>
         )}

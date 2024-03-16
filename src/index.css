@@ -5,11 +5,16 @@
 html,
 body {
   font-family: 'Belanosima', sans-serif;
-  @apply bg-gradient-to-tl from-slate-500 to-blue-500 text-white bg-fixed h-full text-sm md:text-lg;
+  @apply bg-gradient-to-b from-secondary to-primary text-white bg-fixed h-full text-sm md:text-lg;
 }
 
 .page {
   @apply min-h-[calc(100vh-3.5rem)] mx-auto pt-8 p-2 overflow-y-auto container;
+}
+
+.button {
+  font-family: 'Belanosima', sans-serif;
+  @apply backdrop-blur-xl !bg-white/50 !text-black !font-bold;
 }
 
 .page-sm {

@@ -17,10 +17,11 @@ import LabelComponent from 'features/newpizzeria/LabelComponent';
 import { Review } from 'model/review';
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { REVIEWS } from 'routerPath';
 import { addReview } from 'services/auth/reviews.api';
 import { cloudinary } from 'services/cloudinary';
 import { getFullListOrWithFilterPizzerias } from 'services/pocketbase';
-import { buttonStyle, textFieldStyle } from 'utils/style';
+import { textFieldStyle } from 'utils/style';
 
 const NewReview = () => {
   const navigate = useNavigate();
@@ -91,7 +92,11 @@ const NewReview = () => {
   };
 
   const mutationAddReview = useMutation<Review, AxiosError<any, any>, Review>(
-    (review: Review) => addReview(review)
+    async (review: Review) => {
+      const newReview = await addReview(review);
+      navigate(`/${REVIEWS}`);
+      return newReview;
+    }
   );
 
   const handleSendReview = (review: Review) => {
@@ -132,16 +137,16 @@ const NewReview = () => {
     }
   }, [mutationAddReview.isError]);
 
-  useEffect(() => {
-    if (mutationAddReview.isSuccess) {
-      clearForm();
-      setSnackbarData({
-        color: 'success',
-        message: 'Review added succesfully!',
-        open: true,
-      });
-    }
-  }, [mutationAddReview.isSuccess]);
+  // useEffect(() => {
+  //   if (mutationAddReview.isSuccess) {
+  //     clearForm();
+  //     setSnackbarData({
+  //       color: 'success',
+  //       message: 'Review added succesfully!',
+  //       open: true,
+  //     });
+  //   }
+  // }, [mutationAddReview.isSuccess]);
 
   useEffect(() => {
     if (pizzerias) {
@@ -158,7 +163,7 @@ const NewReview = () => {
   }, [pizzerias]);
 
   return (
-    <div className="flex flex-col justify-center items-center sm:w-full h-fit bg-white rounded pb-4">
+    <div className="flex flex-col justify-center items-center sm:w-full h-fit bg-white  rounded pb-4">
       <div className="flex justify-center items-center ">
         <ArrowBackIcon
           onClick={() => navigate(-1)}
@@ -288,7 +293,7 @@ const NewReview = () => {
           <Button
             variant="contained"
             onClick={uploadHandler}
-            style={buttonStyle}
+            className="button"
             startIcon={
               <Tooltip
                 title={
@@ -304,10 +309,11 @@ const NewReview = () => {
             UPLOAD IMAGE
           </Button>
           <Button
-            className={isValid ? '' : 'opacity-50 pointer-events-none'}
+            className={
+              isValid ? 'button' : 'opacity-50 pointer-events-none button'
+            }
             variant="contained"
             onClick={() => handleSendReview(formNewReview)}
-            style={buttonStyle}
             startIcon={<SendIcon />}
           >
             SEND
