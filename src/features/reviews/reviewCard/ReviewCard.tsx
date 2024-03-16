@@ -18,12 +18,12 @@ import ModalDeleteReview from '../modalDeleteReview/ModalDeleteReview';
 export default function ReviewCard({ dataReview }: { dataReview: Review }) {
   const { id, user, title, description, img, pizzeria, rate, created } =
     dataReview;
-  const { isLogged, isImgClicked, setIsImgClicked, handleOpen } =
+  const { isLogged, isImgClicked, setIsImgClicked, handleModal, open } =
     useReviewCard();
 
   return (
     <>
-      <Card className="min-h-[15rem] max-h-96 flex flex-col justify-between shadow-2xl ">
+      <Card className="min-h-[15rem] max-h-96 flex flex-col justify-between shadow-2xl backdrop-blur-xl !bg-white/50">
         <CardHeader
           avatar={
             <Tooltip title={user?.replace(/\s/g, '')}>
@@ -43,7 +43,10 @@ export default function ReviewCard({ dataReview }: { dataReview: Review }) {
             isLogged &&
             id && (
               <Tooltip title="Delete review?">
-                <DeleteIcon className="cursor-pointer" onClick={handleOpen} />
+                <DeleteIcon
+                  className="cursor-pointer mr-1"
+                  onClick={handleModal}
+                />
               </Tooltip>
             )
           }
@@ -68,15 +71,25 @@ export default function ReviewCard({ dataReview }: { dataReview: Review }) {
             {description}
           </Typography>
         </CardContent>
-        {img && (
-          <CardMedia
-            className={'cursor-pointer'}
-            component="img"
-            image={img}
-            alt={pizzeria}
-            onClick={() => setIsImgClicked(!isImgClicked)}
-          />
-        )}
+        <div className="p-4">
+          {img ? (
+            <CardMedia
+              className={'cursor-pointer h-[180px] shadow-2xl'}
+              component="img"
+              image={img}
+              alt={pizzeria}
+              onClick={() => setIsImgClicked(!isImgClicked)}
+            />
+          ) : (
+            <div
+              className={
+                'flex justify-center items-center h-[180px] shadow-2xl'
+              }
+            >
+              No image
+            </div>
+          )}
+        </div>
       </Card>
       {isImgClicked && (
         <div
@@ -99,7 +112,9 @@ export default function ReviewCard({ dataReview }: { dataReview: Review }) {
           </div>
         </div>
       )}
-      {id ? <ModalDeleteReview id={id} /> : null}
+      {id ? (
+        <ModalDeleteReview id={id} handleModal={handleModal} open={open} />
+      ) : null}
     </>
   );
 }

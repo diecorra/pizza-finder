@@ -1,12 +1,20 @@
 import { Box, Button, Modal, Typography } from '@mui/material';
 import useModalDeleteReview from './useModalDeleteReview';
 
-const ModalDeleteReview = ({ id }: { id: string }) => {
-  const { handleDeleteReview, open, handleClose } = useModalDeleteReview();
+const ModalDeleteReview = ({
+  id,
+  open,
+  handleModal,
+}: {
+  id: string;
+  open: boolean;
+  handleModal: () => void;
+}) => {
+  const { handleDeleteReview } = useModalDeleteReview();
   return (
     <Modal
       open={open}
-      onClose={handleClose}
+      onClose={handleModal}
       aria-labelledby="delete review"
       aria-describedby="Modal that permit at the user to delete a review selected."
     >
@@ -17,16 +25,16 @@ const ModalDeleteReview = ({ id }: { id: string }) => {
           </Typography>
           <div className="flex justify-between">
             <Button
+              className="!bg-secondary !text-stone-200"
+              onClick={handleModal}
+            >
+              No
+            </Button>
+            <Button
               className="!bg-primary !text-stone-200"
               onClick={() => handleDeleteReview(id)}
             >
               Yes
-            </Button>
-            <Button
-              className="!bg-secondary !text-stone-200"
-              onClick={handleClose}
-            >
-              No
             </Button>
           </div>
         </div>

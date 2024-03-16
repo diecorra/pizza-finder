@@ -4,14 +4,15 @@ import { selectAuthIsLogged, useAuth } from 'services/auth';
 const useReviewCard = () => {
   const [isImgClicked, setIsImgClicked] = useState(false);
   const isLogged = useAuth(selectAuthIsLogged);
-  const [_, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const [open, setOpen] = useState(false);
+  const handleModal = () => setOpen((old) => !old);
 
   return {
     isLogged,
     isImgClicked,
     setIsImgClicked,
-    handleOpen,
+    handleModal,
+    open,
   };
 };
 

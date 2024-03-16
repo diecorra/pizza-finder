@@ -11,11 +11,11 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { DataApiCity } from 'model/citiesProps';
 import { Pizzeria } from 'model/pizzeria';
-import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
 import { addPizzeria } from 'services/auth/pizzerias.api';
 import { fetchCities } from 'services/fetchCities';
 import { buildCityNameFromResultComponents } from 'utils/buildCityName';
-import { buttonStyle, textFieldStyle } from 'utils/style';
+import { textFieldStyle } from 'utils/style';
 import LabelComponent from './LabelComponent';
 
 const NewPizzeria = () => {
@@ -31,15 +31,11 @@ const NewPizzeria = () => {
     open: boolean;
   }>({ color: 'error', message: '', open: false });
 
-  const {
-    data: citiesFound,
-    isLoading,
-    isFetching,
-    isError,
-  } = useQuery<boolean, AxiosError<any, any>, DataApiCity[]>(
-    [formNewPizzeria.city],
-    () => fetchCities(formNewPizzeria.city)
-  );
+  const { data: citiesFound } = useQuery<
+    boolean,
+    AxiosError<any, any>,
+    DataApiCity[]
+  >([formNewPizzeria.city], () => fetchCities(formNewPizzeria.city));
 
   const mutationAddPizzeria = useMutation<
     Pizzeria,
@@ -182,7 +178,8 @@ const NewPizzeria = () => {
             <Button
               variant="contained"
               onClick={() => handleSave(formNewPizzeria)}
-              style={buttonStyle}
+              className="button"
+              // style={buttonStyle}
               startIcon={<AddBoxIcon />}
             >
               ADD

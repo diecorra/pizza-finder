@@ -12,6 +12,11 @@ body {
   @apply min-h-[calc(100vh-3.5rem)] mx-auto pt-8 p-2 overflow-y-auto container;
 }
 
+.button {
+  font-family: 'Belanosima', sans-serif;
+  @apply backdrop-blur-xl !bg-white/50 !text-black !font-bold;
+}
+
 .page-sm {
   @apply max-w-sm mx-auto;
 }

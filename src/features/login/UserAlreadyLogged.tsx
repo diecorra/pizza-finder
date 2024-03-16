@@ -2,7 +2,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Button, Tooltip } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'services/auth';
-import { buttonStyle } from 'utils/style';
 
 const UserAlreadyLogged = () => {
   const navigate = useNavigate();
@@ -22,7 +21,7 @@ const UserAlreadyLogged = () => {
       <div className="flex items-center justify-center gap-3">
         <p>Now you can add new pizzerias in the database</p>
         <Button
-          sx={buttonStyle}
+          className="button"
           size="small"
           onClick={() => navigate('/newpizzeria')}
         >
